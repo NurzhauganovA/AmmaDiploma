@@ -1,0 +1,276 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <link rel="stylesheet" href="{% static 'questionnaire/css/base_questionnaire.css' %}">
+    
+    <title>Amma - Base Questionnaire</title>
+</head>
+<body>
+    <div class="main_content_container">
+        <div class="questionnaire_center_main_content">
+            <div class="logo_container">
+                <i onclick="previousQuestion(id)" id="previous_question" class="previous_question">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                </i>
+                <a href="{% url 'home' %}"><img src="https://welcome.amma.family/images/small-logo.svg" alt=""></a>
+                <p>Skip</p>
+            </div>
+            <div class="main_questionnaire_block">
+                <div class="questionnaire_round_block">
+                </div>
+            </div>
+            <div class="questionnaire_body">
+            </div>
+            
+            <div class="finished_questionnaire_block">
+                <div class="check_plan_for_pregnancy">
+                    <div class="main_title_check_plan">
+                        <h1>The plan tailored to your health goal is almost ready...</h1>
+                    </div>
+                    <div class="sprinter_block_check_plan">
+                        <div class="progress-container">
+                            <div class="progress_background_circle"></div>
+                            <div class="progress-circle">
+                                <svg class="progress-ring" width="150" height="150">
+                                    <circle class="progress-ring__circle-bg" stroke="#dcdcdc" stroke-width="5"
+                                            fill="transparent" r="70" cx="75" cy="75"/>
+                                    <circle class="progress-ring__circle" stroke="#FFF" stroke-width="5"
+                                            fill="transparent" r="70" cx="75" cy="75"/>
+                                </svg>
+                                <div class="progress-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="139" height="136" viewBox="0 0 139 136" fill="none" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"><path d="M44.9186 27.1784C42.5133 28.7353 40.9575 30.6603 40.135 32.8212C39.3181 34.9674 39.2668 37.2333 39.6755 39.4228C40.2564 42.5348 41.7859 45.6079 43.5895 48.2434C38.1637 46.3687 33.29 45.2504 29.0959 45.6195C26.5275 45.8455 24.1849 46.63 22.1331 48.1471C20.089 49.6586 18.421 51.8323 17.0912 54.7036C15.7085 57.6891 15.6737 60.4912 16.6761 62.9794C17.6575 65.4158 19.5716 67.4024 21.8279 68.9578C25.6231 71.574 30.6882 73.1805 35.0915 73.6852C32.5075 75.6823 30.0102 78.3218 28.3492 81.3707C26.2577 85.2097 25.456 89.7915 27.6408 94.4529C28.8622 97.0591 30.7601 98.7377 33.0943 99.5968C35.3812 100.438 37.9751 100.455 40.5931 99.9816C44.9983 99.1855 49.7859 96.9471 54.0179 94.2625C53.2334 98.1068 52.9747 102.651 54.0631 106.546C54.7486 109 55.9936 111.28 58.0633 112.918C60.1464 114.566 62.9178 115.447 66.43 115.356C72.3972 115.2 77.2241 112.508 80.2812 108.242C82.9248 104.554 84.1935 99.7669 83.8381 94.5673C87.7639 98.5862 92.7758 101.159 97.5804 102.04C103.022 103.038 108.541 101.896 111.68 97.7145C113.693 95.0341 114.028 92.0999 113.31 89.2578C112.608 86.4827 110.912 83.8085 108.888 81.4218C105.502 77.4281 100.95 73.9514 97.5992 71.7959C106.77 67.7573 111.636 62.3281 113.513 56.9106C115.507 51.1561 114.044 45.6015 111.071 42.3041C106.941 37.7244 101.471 37.2683 96.4439 38.426C92.7696 39.2721 89.1968 40.9993 86.2524 42.7607C87.5585 39.5234 88.4041 35.9521 88.2603 32.8381C88.1634 30.7422 87.6097 28.6999 86.276 27.1429C84.9075 25.5453 82.8893 24.6577 80.2914 24.581C76.9759 24.4831 73.9038 26.1563 71.5659 28.4315C69.7128 30.2351 68.2151 32.5145 67.3325 34.8719C65.0253 31.0405 61.811 27.996 58.1854 26.341C53.9841 24.4231 49.2314 24.387 44.9186 27.1784Z" fill="#FFC15B" stroke="white" stroke-width="3.01473" stroke-linecap="round" stroke-linejoin="round"></path><path d="M81.9644 63.88C81.3534 61.4343 81.3784 51.5342 74.9586 51.8389C69.8228 52.0826 68.5846 60.0605 68.6075 64.019" stroke="black" stroke-width="4.07096" stroke-linecap="round"></path><path d="M47.8282 64.4662C48.4152 62.0146 48.293 52.1152 54.7155 52.3569C59.8535 52.5502 61.1699 60.5156 61.1859 64.4741" stroke="black" stroke-width="4.07096" stroke-linecap="round"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M73.6298 69.4642C73.5648 68.8115 73.0787 68.279 72.4346 68.1549C71.7904 68.0307 71.1413 68.3445 70.8384 68.9264C69.6727 71.1655 67.9147 72.0665 66.1293 72.3291C64.2713 72.6024 62.3878 72.1715 61.2575 71.6929C60.7815 71.4914 60.235 71.5522 59.8149 71.8534C59.3949 72.1546 59.1619 72.6527 59.2001 73.1681C59.4094 75.9984 60.0708 80.2743 61.4037 83.9129C62.0686 85.7282 62.9337 87.4779 64.064 88.8123C65.2044 90.1586 66.7146 91.1898 68.6215 91.2593C69.6658 91.2973 70.6265 91.1243 71.4731 90.7012C72.3255 90.2753 72.9791 89.637 73.4643 88.8737C74.4 87.4016 74.7231 85.4436 74.7965 83.435C74.9039 80.5008 74.4763 76.8604 74.0583 73.3014L74.0583 73.3013C73.9053 71.9985 73.7535 70.7066 73.6298 69.4642Z" fill="black"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M66.1456 90.5656C66.8816 90.9713 67.7063 91.2267 68.6225 91.26C69.6668 91.2981 70.6275 91.1251 71.474 90.702C72.3264 90.276 72.9801 89.6378 73.4653 88.8744C74.4009 87.4023 74.724 85.4444 74.7975 83.4357C74.8407 82.2539 74.7971 80.9574 74.7024 79.5979C72.0754 78.7963 69.1776 78.9195 66.5804 82.0912C65.1625 83.8228 65.4501 87.3405 66.1456 90.5656Z" fill="#FF5959"></path></svg>
+                                </div>
+                            </div>
+                            <div class="progress-text">
+                                <div class="percent" id="percent">0%</div>
+                                <div class="status">Collecting necessary data</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="send_email_block">
+                <div class="main_icon_block">
+                    <img src="https://welcome.amma.family/images/email-illustration.svg" alt="">
+                </div>
+                <div class="title_block_send_email">
+                    <h1>Get your amma plan</h1>
+                    <p>Enter your email and see your progress in seconds</p>
+                </div>
+                <label>
+                    <input type="email" placeholder="Email Address" name="email">
+                </label>
+                <button onclick="sendResultQuestionnaireToEmail()">Get my plan</button>
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+        const circle = document.querySelector('.progress-ring__circle');
+        const percentText = document.getElementById('percent');
+        const radius = circle.r.baseVal.value;
+        const circumference = 2 * Math.PI * radius;
+
+        circle.style.strokeDasharray = `${circumference} ${circumference}`;
+        circle.style.strokeDashoffset = circumference;
+
+        function setProgress(percent) {
+            const offset = circumference - percent / 100 * circumference;
+            circle.style.strokeDashoffset = offset;
+            percentText.textContent = `${percent}%`;
+        }
+
+        let progressInterval = null;
+
+        function startProgressAnimation() {
+            document.querySelector('.questionnaire_round_block').style.display = 'none';
+            document.querySelector('.previous_question svg').style.display = 'none';
+            
+            let progress = 0;
+            const duration = 5000;
+            const intervalTime = 50;
+            const increment = 100 / (duration / intervalTime);
+
+            const interval = setInterval(() => {
+                progress += increment;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        setSendEmailBlock();
+                    }, 1000);
+                }
+                setProgress(Math.floor(progress));
+            }, intervalTime);
+        }
+        
+        function sendResultQuestionnaireToEmail() {
+            const email = document.querySelector('input[name="email"]').value;
+            const result = getResultQuestionnaire();
+            console.log(email, result);
+            
+            fetch('/questionnaire/get_my_plan/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    email: email,
+                    result: result
+                })
+            }).then(response => {
+                if (response.ok) {
+                    console.log('Email sent');
+                    window.location.href = '/';
+                }
+            })
+        }
+        
+        function setSendEmailBlock() {
+            document.querySelector('.finished_questionnaire_block').classList.remove('active');
+            document.querySelector('.send_email_block').classList.add('active');
+        }
+        
+        renderQuestionnaire();
+        const questionnaireResult = [];
+        
+        function getQuestionnaire() {
+            let questionnaires = {{ questionnaires|safe }};
+            
+            console.log("questionnaires:", questionnaires);
+
+            return questionnaires;
+        }
+        
+        function renderQuestionnaire() {
+            const questionnaire = getQuestionnaire();
+            const questionnaireBody = document.querySelector('.questionnaire_body');
+            const questionnaireRoundBlock = document.querySelector('.questionnaire_round_block');
+            questionnaire.forEach((question, index) => {
+                const questionnaireContent = document.createElement('div');
+                questionnaireContent.classList.add('questionnaire_content');
+                questionnaireContent.dataset.id = question.id;
+                if (index === 0) {
+                    questionnaireContent.classList.add('active');
+                }
+                const questionnaireTitle = document.createElement('div');
+                questionnaireTitle.classList.add('questionnaire_title');
+                const title = document.createElement('h1');
+                title.textContent = question.title;
+                questionnaireTitle.appendChild(title);
+                questionnaireContent.appendChild(questionnaireTitle);
+                const questionnaireAnswerBlock = document.createElement('div');
+                questionnaireAnswerBlock.classList.add('questionnaire_answer_block');
+                question.answers.forEach(answer => {
+                    const questionnaireAnswer = document.createElement('div');
+                    questionnaireAnswer.classList.add('questionnaire_answer');
+                    questionnaireAnswer.dataset.id = answer.id;
+                    const p = document.createElement('p');
+                    p.textContent = answer.title;
+                    questionnaireAnswer.appendChild(p);
+                    questionnaireAnswerBlock.appendChild(questionnaireAnswer);
+                });
+                questionnaireContent.appendChild(questionnaireAnswerBlock);
+                questionnaireBody.appendChild(questionnaireContent);
+                const questionnaireRound = document.createElement('div');
+                if (index === 0) {
+                    questionnaireRound.classList.add('active');
+                }
+                questionnaireRound.classList.add('questionnaire_round');
+                questionnaireRoundBlock.appendChild(questionnaireRound);
+            });
+        }
+        
+        function setQuestionnaireAnswerActiveState(questionId, questionTitle, answerId, answerTitle) {
+            const i = questionnaireResult.find(item => item.questionId === questionId);
+            if (i) {
+                i.questionTitle = questionTitle;
+                i.answerId = answerId;
+                i.answerTitle = answerTitle;
+            } else {
+                questionnaireResult.push({
+                    questionId: questionId,
+                    questionTitle: questionTitle,
+                    answerId: answerId,
+                    answerTitle: answerTitle
+                });
+            }
+        }
+        
+        function getResultQuestionnaire() {
+            return questionnaireResult;
+        }
+        
+        function updateRoundsActiveState(activeIndex) {
+            const questionnaireRound = document.querySelectorAll('.questionnaire_round');
+            questionnaireRound.forEach((round, index) => {
+                if (index <= activeIndex) {
+                    round.classList.add('active');
+                } else {
+                    round.classList.remove('active');
+                }
+            });
+        }
+        
+        function previousQuestion(id) {
+            const questionnaireContent = document.querySelectorAll('.questionnaire_content');
+            for (let i = 0; i < questionnaireContent.length; i++) {
+                if (questionnaireContent[i].classList.contains('active') && i > 0) {
+                    questionnaireContent[i].classList.remove('active');
+                    questionnaireContent[i - 1].classList.add('active');
+                    updateRoundsActiveState(i - 1);
+                    break;
+                }
+            }
+        }
+
+        const questionnaireBody = document.querySelector('.questionnaire_body');
+        questionnaireBody.addEventListener('click', function (event) {
+            const target = event.target.closest('.questionnaire_answer');
+            if (target) {
+                const questionnaireContent = document.querySelectorAll('.questionnaire_content');
+                for (let i = 0; i < questionnaireContent.length; i++) {
+                    if (questionnaireContent[i].classList.contains('active') && i < questionnaireContent.length - 1) {
+                        setQuestionnaireAnswerActiveState(
+                            questionnaireContent[i].dataset.id,
+                            questionnaireContent[i].querySelector('.questionnaire_title h1').textContent,
+                            target.dataset.id,
+                            target.querySelector('p').textContent
+                        );
+                        questionnaireContent[i].classList.remove('active');
+                        questionnaireContent[i + 1].classList.add('active');
+                        updateRoundsActiveState(i + 1);
+                        break;
+                    } else if (i === questionnaireContent.length - 1) {
+                        setQuestionnaireAnswerActiveState(
+                            questionnaireContent[i].dataset.id,
+                            questionnaireContent[i].querySelector('.questionnaire_title h1').textContent,
+                            target.dataset.id,
+                            target.querySelector('p').textContent
+                        );
+                        questionnaireContent[i].classList.remove('active');
+                        document.querySelector('.finished_questionnaire_block').classList.add('active');
+                        startProgressAnimation();
+                        const result = getResultQuestionnaire();
+                        console.log(result);
+                    }
+                }
+            }
+
+            if (event.target.closest('.previous_question')) {
+                previousQuestion(event.target.id);
+            }
+        });
+    </script>
+</body>
+</html>

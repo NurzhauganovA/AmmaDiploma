@@ -1,0 +1,311 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% load nutrition_filters %}
+
+{% block title %}Amma - Nutrition for pregnancy mothers{% endblock %}
+
+{% block links %}
+    <link rel="stylesheet" href="{% static 'nutrition/css/nutrition.css' %}">
+    <link rel="stylesheet" href="{% static 'nutrition/css/nutrition-modal.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap"
+          rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <!-- Hero Section -->
+    <section class="nutrition-hero">
+        <div class="container">
+            <h1>Pregnancy Nutrition</h1>
+            <p class="subtitle">Nourish your body and your baby with balanced nutrition during your pregnancy
+                journey</p>
+        </div>
+    </section>
+
+    <!-- Daily Recommendations Section -->
+    {% if tracker_data %}
+        <section class="daily-recommendations">
+            <div class="container">
+                <h2>Your Pregnancy Nutrition Tracker</h2>
+                <p class="subtitle">Track your daily nutrients to support your baby's healthy development</p>
+
+                <div class="tracker-overview">
+                    <div class="card overview-card">
+                        <div class="overview-stats">
+                            <div class="progress-circle" data-percentage="{{ progress_percentage|default:0 }}">
+                                <svg viewBox="0 0 36 36" class="circular-chart">
+                                    <path class="circle-bg" d="M18 2.0845
+                a 15.9155 15.9155 0 0 1 0 31.831
+                a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                                    <path class="circle" stroke-dasharray="{{ progress_percentage|default:0 }}, 100" d="M18 2.0845
+                a 15.9155 15.9155 0 0 1 0 31.831
+                a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                                    <text x="18" y="20.35" class="percentage">
+                                        {{ progress_percentage|default:0|floatformat:0 }}%
+                                    </text>
+                                </svg>
+                            </div>
+                            <div class="overview-text">
+                                <h3>Today's Progress</h3>
+                                <p>Keep track of your essential nutrients for a healthy pregnancy</p>
+                                <a href="#" class="view-history-btn">View History</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabs for categorizing nutrients -->
+                <div class="tracker-tabs">
+                    <button class="tab-btn active" data-category="all">All Nutrients</button>
+                    <button class="tab-btn" data-category="vitamins">Vitamins</button>
+                    <button class="tab-btn" data-category="minerals">Minerals</button>
+                    <button class="tab-btn" data-category="macros">Macronutrients</button>
+                    <button class="tab-btn" data-category="hydration">Hydration</button>
+                </div>
+
+                <div class="recommendations-grid">
+                    {% for progress in tracker_data %}
+                        <div class="recommendation-card"
+                             data-category="{{ progress.nutrient.category|default:'all'|lower }}">
+                            <div class="card-header" style="background-color: {{ progress.nutrient.color_code }}20;">
+                                <h3>{{ progress.nutrient.nutrient }}</h3>
+                                <div class="badge" style="background-color: {{ progress.nutrient.color_code }};">
+                                    {{ progress.nutrient.target_amount }} {{ progress.nutrient.unit }}
+                                </div>
+                            </div>
+
+                            <div class="card-body">
+                                <div class="progress-info">
+                                    <div class="progress-bar-wrapper">
+                                        <div class="progress-bar"
+                                             style="width: {{ progress.progress_percentage }}%; background-color: {{ progress.nutrient.color_code }};"></div>
+                                    </div>
+                                    <div class="progress-numbers">
+                                        <span class="current-amount">{{ progress.current_amount|floatformat:1 }}</span>
+                                        <span class="target-amount">/ {{ progress.nutrient.target_amount }} {{ progress.nutrient.unit }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="nutrient-info">
+                                    <button class="info-toggle" aria-label="Show nutrient information">
+                                        <i class="icon-info"></i>
+                                    </button>
+                                    <div class="info-popup">
+                                        <p>{{ progress.nutrient.description }}</p>
+                                    </div>
+                                </div>
+
+                                <form class="input-group" method="post" action="">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="progress_id" value="{{ progress.id }}">
+                                    <div class="amount-controls">
+                                        <button type="button" class="amount-btn decrease" aria-label="Decrease amount">
+                                            -
+                                        </button>
+                                        <input type="number"
+                                               class="nutrient-input"
+                                               min="0"
+                                               max="{{ progress.nutrient.target_amount }}"
+                                               step="1"
+                                               value="{{ progress.current_amount|floatformat:1 }}"
+                                               data-progress-id="{{ progress.id }}"
+                                               name="amount"
+                                        >
+                                        <button type="button" class="amount-btn increase" aria-label="Increase amount">
+                                            +
+                                        </button>
+                                    </div>
+                                    <button type="submit" class="update-btn">Update</button>
+                                </form>
+
+                                <div class="quick-add">
+                                    <p>Quick Add:</p>
+                                    <div class="quick-options">
+                                        <button type="button" class="quick-option"
+                                                data-amount="{{ progress.nutrient.target_amount|floatformat:1 }}">
+                                            All
+                                        </button>
+                                        <button type="button" class="quick-option"
+                                                data-amount="{{ progress.half_amount|floatformat:1 }}">
+                                            ½
+                                        </button>
+                                        <button type="button" class="quick-option"
+                                                data-amount="{{ progress.quarter_amount|floatformat:1 }}">
+                                            ¼
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% if progress.progress_percentage >= 100 %}
+                                <div class="complete-badge">
+                                    <i class="icon-check"></i> Complete
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="tracker-tips">
+                    <div class="tip-card">
+                        <div class="tip-icon">
+                            <i class="icon-lightbulb"></i>
+                        </div>
+                        <div class="tip-content">
+                            <h4>Nutrition Tip</h4>
+                            <p>Try to eat a variety of colorful fruits and vegetables daily to ensure you get a wide
+                                range of nutrients.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    {% endif %}
+
+    <!-- Nutrition Content Section -->
+    <section class="nutrition-content">
+        <div class="container">
+            <h2>Pregnancy Nutrition Resources</h2>
+
+            <!-- Фильтры ПЕРЕМЕЩЕНЫ сюда - вверх контент-секции -->
+            <div class="filter-wrapper">
+                <div class="filter-group">
+                    <span class="filter-label">Category:</span>
+                    <div class="filter-pills">
+                        {% for type in content_types %}
+                            <button class="filter-pill {% if forloop.first %}active{% endif %}"
+                                    data-type="{{ type.name }}">
+                                {{ type.name }}
+                            </button>
+                        {% endfor %}
+                        <button class="filter-pill active" data-type="All">All</button>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <span class="filter-label">Trimester:</span>
+                    <div class="filter-pills">
+                        <button class="filter-pill active" data-trimester="All">All</button>
+                        <button class="filter-pill" data-trimester="1">1st</button>
+                        <button class="filter-pill" data-trimester="2">2nd</button>
+                        <button class="filter-pill" data-trimester="3">3rd</button>
+                    </div>
+                </div>
+
+                <div class="search-wrapper">
+                    <input type="text" id="nutrition-search" placeholder="Search foods, nutrients...">
+                    <button class="search-button">
+                        <i class="icon-search"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="content-grid" id="nutrition-content-grid">
+                {% for content in nutrition_content %}
+                    <div class="content-card" data-type="{{ content.content_type.name }}"
+                         data-trimester="{{ content.trimester }}">
+                        <div class="card-image" style="background-image: url('{{ content.image.url }}')">
+                            <span class="content-type-badge" style="background-color: {{ content.color_code }}">
+                                {{ content.content_type.name }}
+                            </span>
+
+                            {% if content.trimester != 'all' %}
+                                <span class="trimester-badge">
+                                    {{ content.get_trimester_display }}
+                                </span>
+                            {% endif %}
+                        </div>
+
+                        <div class="card-content">
+                            <h3>{{ content.title }}</h3>
+
+                            <div class="card-details">
+                                {% if content.content_type.name == 'Recipe' %}
+                                    <div class="detail-item">
+                                        <i class="icon-clock"></i>
+                                        <span>{{ content.prep_time|add:content.cook_time }} min</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <i class="icon-difficulty"></i>
+                                        <span>{{ content.get_difficulty_display }}</span>
+                                    </div>
+                                {% elif content.content_type.name == 'Meal Plan' %}
+                                    <div class="detail-item">
+                                        <i class="icon-calendar"></i>
+                                        <span>{{ content.days }} days</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <i class="icon-focus"></i>
+                                        <span>{{ content.focus }}</span>
+                                    </div>
+                                {% else %}
+                                    <div class="detail-item">
+                                        <i class="icon-clock"></i>
+                                        <span>{{ content.read_time }} min read</span>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="benefit-tags">
+                                {% for benefit in content.benefits.all %}
+                                    <span class="benefit-tag">{{ benefit.name }}</span>
+                                {% endfor %}
+                            </div>
+
+                            <a href="{% url 'nutrition_detail' content.id %}" class="view-more-btn">
+                                View Details
+                                <i class="icon-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Foods to Avoid Section -->
+    <section class="foods-to-avoid">
+        <div class="container">
+            <h2>Foods to Avoid During Pregnancy</h2>
+            <p>For your safety and your baby's development, be cautious with these foods</p>
+
+            <div class="avoid-foods-grid">
+                <div class="avoid-food-card">
+                    <div class="avoid-icon">
+                        <i class="icon-warning"></i>
+                    </div>
+                    <h3>Raw or Undercooked Foods</h3>
+                    <p>Raw eggs, meat, fish, and shellfish may contain harmful bacteria</p>
+                </div>
+
+                <div class="avoid-food-card">
+                    <div class="avoid-icon">
+                        <i class="icon-warning"></i>
+                    </div>
+                    <h3>Unpasteurized Dairy</h3>
+                    <p>Avoid soft cheeses and unpasteurized milk products</p>
+                </div>
+
+                <div class="avoid-food-card">
+                    <div class="avoid-icon">
+                        <i class="icon-warning"></i>
+                    </div>
+                    <h3>High-Mercury Fish</h3>
+                    <p>Limit intake of tuna, swordfish, king mackerel, and tilefish</p>
+                </div>
+
+                <div class="avoid-food-card">
+                    <div class="avoid-icon">
+                        <i class="icon-warning"></i>
+                    </div>
+                    <h3>Excessive Caffeine</h3>
+                    <p>Limit coffee, tea, and energy drinks to 200mg of caffeine daily</p>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'nutrition/js/nutrition.js' %}"></script>
+    <script src="{% static 'nutrition/js/nutrition-resources.js' %}"></script>
+{% endblock %}

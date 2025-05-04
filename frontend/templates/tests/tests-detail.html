@@ -1,0 +1,33 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block links %}
+    <link rel="stylesheet" href="{% static 'tests/css/tests-detail.css' %}">
+{% endblock %}
+
+{% block title %} Amma - Home {% endblock %}
+
+{% block page_title %} Home {% endblock %}
+
+{% block content %}
+
+<section>
+        <div class="wrapper">
+            <div class="section_container">
+                <div class="image_block_background_test_data">
+                    <div class="image_block_test_data" style="background-image: url('{{ test.image.url }}')"></div>
+                </div>
+                <div class="main_info_block_test_data">
+                    <h1>{{ test.title }}</h1>
+                    <p>{{ test.description }}</p>
+                    <a href="{% url 'quiz' test.id %}">Pass the test</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}

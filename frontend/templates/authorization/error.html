@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error</title>
+    <style>
+        .error-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            padding: 20px;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .error-button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .error-button:hover {
+            background-color: #0056b3;
+        }
+        .inner-error-container {
+            padding-bottom: 10%;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="inner-error-container">
+            <h1>{{ code }}</h1>
+            <h2>{{ message }}</h2>
+            <h3>{{ info }}</h3>
+            <a href="{% url link %}" class="error-button">{{ button }}</a>
+        </div>
+    </div>
+</body>
+</html>

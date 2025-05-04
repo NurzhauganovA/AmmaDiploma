@@ -1,0 +1,68 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block links %}
+    <link rel="stylesheet" href="{% static 'pregnancy/css/detail_week.css' %}">
+{% endblock %}
+
+{% block title %} Amma - Pregnancy Week - {{ week.week_number }} {% endblock %}
+
+{% block page_title %} Pregnancy Week - {{ week.week_number }} {% endblock %}
+
+{% block content %}
+    <div class="main_container_block">
+        <div class="title_main_container_block">
+            <h1>Pregnancy Week by Week</h1>
+        </div>
+        <div class="photo_main_content_block">
+            <div class="img_block_photo_main">
+                <img src="https://assets.babycenter.com/ims/2025/03/40-body-E-deeptan_4x3.jpg?height=449px" alt="">
+            </div>
+            <div class="word_block_photo_main">
+                <p>Looking for a week-by-week guide to pregnancy? You're in luck! We've got loads of expert-approved info about each week and trimester, including what's up with your growing baby and what changes to expect for yourself.</p>
+                <p>You'll find stunning fetal development videos, thousands of articles, and helpful tools like our Due Date Calculator and Baby Names Finder. Meet other parents-to-be in our online community, and get all of this and more in our free pregnancy app. Dive in, and congratulations!</p>
+            </div>
+        </div>
+
+        <div class="week_by_week_pregnancy_container">
+            <div class="title_block">
+                <h1>Pregnancy week <b>{{ week.week_number }}</b></h1>
+                <a href="{% url 'week_by_week' %}" class="prev_all_weeks">
+                    <i>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+                        </svg>
+                    </i>
+                    <h1>All weeks</h1>
+                </a>
+            </div>
+            <div class="main_content_week_by_week_block">
+                <h2>Highlights this week</h2>
+                {{ week_content.highlights_this_week_text|safe }}
+                <div class="br_block_week_by_week">
+                    <div></div>
+                    <img src="https://assets.babycenter.com/ims/2023/12/ic_stage_babyDevlopment-rejuv.svg" alt="">
+                    <div></div>
+                </div>
+                <h2>Baby development at {{ week.week_number }} weeks</h2>
+                {{ week_content.baby_development_text|safe }}
+                <div class="img_baby_development"
+                     style="background-image: url('{{ week_content.baby_development_image.url }}')"
+                >
+                </div>
+                <div class="br_block_week_by_week">
+                    <div></div>
+                    <img src="https://assets.babycenter.com/ims/2023/12/ic_stage_momDevlopment-rejuv.svg" alt="">
+                    <div></div>
+                </div>
+                <h2>Pregnancy symptoms during week {{ week.week_number }}</h2>
+                {{ week_content.pregnancy_symptoms_text|safe }}
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}

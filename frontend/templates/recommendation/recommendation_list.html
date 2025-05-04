@@ -1,0 +1,28 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block links %}
+    <link rel="stylesheet" href="{% static 'recommendation/css/recommendation_list.css' %}">
+{% endblock %}
+
+{% block title %} Amma - Recommendations {% endblock %}
+
+{% block page_title %} Recommendations {% endblock %}
+
+{% block content %}
+    <div class="recommendation-list-container">
+        {% for recommendation in recommendations %}
+            <div class="recommendation-card">
+                <h2>{{ recommendation.title }}</h2>
+                <div class="recommendation-preview">
+                    {{ recommendation.content|truncatechars_html:300|safe }}
+                </div>
+                <a href="{% url 'recommendation_detail' recommendation.id %}" class="recommendation-button">Read More</a>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}

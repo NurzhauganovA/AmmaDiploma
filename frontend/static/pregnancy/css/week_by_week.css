@@ -1,0 +1,106 @@
+.title_main_container_block {
+    margin-bottom: 50px;
+    text-align: center;
+}
+
+.title_main_container_block h1 {
+    font-size: 40px;
+    font-weight: 600;
+}
+
+.photo_main_content_block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.img_block_photo_main img {
+    width: 650px;
+    height: 470px;
+}
+
+.word_block_photo_main {
+    background-color: #DFFFF6;
+    width: 450px;
+    height: 370px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 50px 100px;
+    text-align: center;
+    gap: 30px;
+}
+
+.word_block_photo_main p {
+    font-weight: 600;
+    font-size: 16px;
+    color: #555;
+    line-height: 1.6;
+}
+
+.main_pregnancy_container {
+    margin: 100px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+.trimester_pregnancy_container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.title_trimester_pregnancy_container {
+    text-align: center;
+}
+
+.title_trimester_pregnancy_container h1 {
+    font-size: 32px;
+    font-weight: 600;
+}
+
+.main_content_trimester_block {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.trimester_cart_block {
+    width: 310px;
+    background-color: #fff;
+    border: 1px solid #F3F2F2;
+    border-right: 4px solid #88EAC8;
+    border-bottom: 4px solid #88EAC8;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+}
+
+.img_block_trimester_cart {
+    width: 310px;
+    height: 230px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 10px 10px 0 0;
+}
+
+.word_block_trimester_cart {
+    padding: 15px 12px 20px 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.word_block_trimester_cart h1 {
+    color: #000;
+    font-weight: 600;
+}
+
+.word_block_trimester_cart p {
+    color: #555;
+    font-size: 14px;
+    font-weight: 400;
+    margin-top: 10px;
+}

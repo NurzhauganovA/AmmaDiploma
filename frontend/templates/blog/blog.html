@@ -1,0 +1,95 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block links %}
+    <link rel="stylesheet" href="{% static 'blog/css/blog.css' %}">
+{% endblock %}
+
+{% block title %} Amma - Blog {% endblock %}
+
+{% block page_title %} Blog {% endblock %}
+
+{% block content %}
+    {% if blogs %}
+            <div class="wrapper">
+                <div class="section_container">
+
+                    <div class="main_article_data_block_section_container">
+                        {% for blog in blogs %}
+                            <div class="article_data_block">
+                                <a href="{% url 'blog-detail' blog.id %}" class="image_article_data_block" style="background-image: url('{{ blog.image.url }}')"></a>
+                                <div class="title_article_data_block">
+                                    <a href="{% url 'blog-detail' blog.id %}">{{ blog.title }}</a>
+                                </div>
+                                <div class="summary_article_data_block">
+                                    <p>{{ blog.summary }}</p>
+                                </div>
+                                <div class="author_date_article_data_block">
+                                    <p>{% if blog.author.full_name is not None %}{{ blog.author.full_name }}{% else %}{{ blog.author.email }}{% endif %}, {{ blog.formatted_date }}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="background_section_block"></div>
+        <div class="wrapper">
+            <div class="section_container">
+                <div class="main_maket_create_post_block">
+                    <div class="main_service_maket_create_post_block">
+                        <div class="title_main_service">
+                            <h1>Create your own article</h1>
+                            <a href="#image">Add post</a>
+                        </div>
+                        <div class="icon_main_service">
+                            <i>
+                                <svg width="138" height="179" viewBox="0 0 138 179" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0.224365 178.695C10.5064 171.151 19.7808 162.319 27.8208 152.415C33.9721 144.812 37.0617 139.418 49.2408 119.566C57.1385 106.7 63.9248 95.7918 69.1235 87.4894C70.1845 84.6513 71.2025 80.4635 69.7006 76.2807C68.5893 73.1878 66.8077 72.0753 64.6833 68.7452C63.0806 66.2225 61.173 62.2819 60.4371 56.3837C56.6329 63.266 55.2719 71.2362 56.5765 78.9927C56.8109 79.9135 58.2549 85.2189 63.1285 87.4944C68.1685 89.8406 73.2866 87.2951 74.9296 86.4853C81.905 83.0165 80.5039 77.9079 86.4838 74.7494C92.6125 71.5001 95.513 76.0966 104.628 73.203C106.82 72.5067 113.425 70.4103 117.56 64.507C120.138 60.8263 119.947 58.2506 123.545 53.2984C125.215 51.0057 127.162 48.9288 129.341 47.1151L117.951 42.284C113.851 39.6931 112.294 35.8636 113.415 33.5729C113.718 32.9898 114.166 32.495 114.716 32.1361C115.266 31.7772 115.9 31.5665 116.555 31.5244C120.567 31.3756 123.908 39.2542 122.578 40.5458C121.608 41.4868 117.724 39.3753 115.242 37.2662C109.64 32.4906 109.549 26.2846 107.387 26.2998C105.535 26.3124 105.792 30.8635 101.924 36.1057C98.6277 40.5736 88.7972 46.3482 88.7972 46.3482C86.635 50.2433 84.551 55.6622 85.7076 61.5352C86.4636 65.4455 88.4066 68.1549 88.026 68.3769C87.5044 68.6797 83.5959 63.788 81.0784 57.5568C80.3451 55.7429 78.2913 50.6621 79.3396 50.0188C80.456 49.3351 85.6069 53.3539 87.0609 58.909C88.3411 63.7956 86.3049 68.1801 84.745 71.4673C82.225 76.7374 79.4984 78.7606 76.0586 82.8702C73.1001 86.402 69.3025 91.8487 66.2155 99.8736C66.1828 100.792 66.276 101.96 66.9866 102.396C68.1861 103.11 69.6679 100.835 72.198 100.85C74.97 100.868 75.7461 103.625 78.3745 103.749C79.574 103.802 81.2674 103.312 83.3943 100.85C83.6942 100.638 84.9542 99.8004 86.4662 100.126C87.7488 100.401 89.1827 101.503 89.1726 102.586C89.1474 105.139 81.1087 104.889 78.3745 110.318C78.2006 110.666 76.9583 113.206 77.9889 114.569C78.9969 115.888 81.0935 114.745 84.5132 115.389C88.2755 116.097 88.079 117.911 92.4663 119.4C96.9317 120.913 100.356 120.096 100.573 121.14C100.722 121.857 99.2375 122.906 97.8691 123.459C93.2651 125.311 90.5914 121.229 84.9365 122.107C81.0809 122.705 81.1188 124.793 77.4093 124.811C73.8183 124.829 73.2437 122.871 69.4965 123.073C66.5355 123.232 65.777 124.513 62.7404 124.425C60.9873 124.355 59.272 123.893 57.7206 123.073C59.0396 125.617 60.8818 127.852 63.126 129.632C70.0157 135.008 77.2934 132.854 79.7252 137.554C80.0402 138.159 80.0755 138.5 79.7252 145.283C79.196 155.543 78.9868 157.163 80.1133 158.23C81.8243 159.855 85.5035 159.123 91.5011 156.492C99.1972 153.111 107.15 149.622 115.441 140.646C129.079 125.871 132.189 108.625 133.197 102.578C134.107 97.1414 133.288 98.3625 134.85 84.2123C136.544 68.8865 137.713 65.5691 137.597 58.3313C137.511 52.9174 136.702 45.0767 133.197 35.528C128.232 22.9354 119.103 12.4281 107.334 5.75946C102.782 3.58965 97.8032 2.46374 92.7611 2.46374C87.719 2.46374 82.7405 3.58965 78.188 5.75946C65.069 7.92927 51.6009 6.04149 39.5816 0.348129" stroke="#B87CA3" stroke-width="3" stroke-miterlimit="10"/>
+                                </svg>
+                            </i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form_create_post_block">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <label>
+                            <p id="image">Image <span>*</span></p>
+                            <input type="file" name="image" class="article_form_input_image_file" />
+                        </label>
+
+                        <label>
+                            <p>Article title <span>*</span></p>
+                            <input type="text" name="title" class="article_form_input_text" />
+                        </label>
+
+                        <label>
+                            <p>Description <span>*</span></p>
+                            <input type="text" name="summary" class="article_form_input_text" />
+                        </label>
+
+                        <label>
+                            <p>Article text <span>*</span></p>
+                            <textarea name="description" cols="30" rows="10" class="article_form_input_text"></textarea>
+                        </label>
+
+                        <div class="error_message">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+
+                        <button type="submit">Add post</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}

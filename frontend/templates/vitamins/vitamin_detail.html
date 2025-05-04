@@ -1,0 +1,300 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}{{ vitamin.name }} - Vitamins for Pregnant Women{% endblock %}
+
+{% block links %}
+    <link rel="stylesheet" href="{% static 'vitamin/css/vitamin_detail.css' %}">
+{% endblock %}
+
+{% block content %}
+    <main class="container">
+        <div class="breadcrumbs">
+            <a href="{% url 'vitamin_list' %}">Vitamins</a> /
+            <span>{{ vitamin.name }}</span>
+        </div>
+
+        <div class="vitamin-detail">
+            <div class="vitamin-header">
+                <div class="vitamin-image" style="background-image: url('{{ vitamin.image.url }}')"></div>
+                <div class="vitamin-header-content">
+                    <h1>{{ vitamin.name }}</h1>
+                    <div class="vitamin-badge-container">
+                        {% if vitamin.trimester_1 %}
+                            <span class="vitamin-badge trimester-1">First trimester</span>
+                        {% endif %}
+                        {% if vitamin.trimester_2 %}
+                            <span class="vitamin-badge trimester-2">Second trimester</span>
+                        {% endif %}
+                        {% if vitamin.trimester_3 %}
+                            <span class="vitamin-badge trimester-3">Third trimester</span>
+                        {% endif %}
+                        {% if vitamin.critical %}
+                            <span class="vitamin-badge critical">Critical</span>
+                        {% endif %}
+                    </div>
+                    <div class="vitamin-meta">
+                        <div class="meta-item">
+                            <span class="meta-label">Recommended dose:</span>
+                            <span class="meta-value">{{ vitamin.recommended_dose }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="vitamin-tabs">
+                <button class="tab-button active" data-tab="description">Description</button>
+                <button class="tab-button" data-tab="sources">Sources</button>
+                <button class="tab-button" data-tab="side-effects">Side Effects</button>
+            </div>
+
+            <div class="vitamin-content-tabs">
+                <div class="tab-content active" id="tab-description">
+                    <h3>Why {{ vitamin.name }} is important during pregnancy</h3>
+                    <p>{{ vitamin.description }}</p>
+                </div>
+
+                <div class="tab-content" id="tab-sources">
+                    <h3>Natural sources of {{ vitamin.name }}</h3>
+                    <p>{{ vitamin.sources }}</p>
+                    <div class="sources-grid">
+                        <!-- This section will be populated with JavaScript -->
+                    </div>
+                </div>
+
+                <div class="tab-content" id="tab-side-effects">
+                    <h3>Potential side effects</h3>
+                    <p>{{ vitamin.side_effects }}</p>
+                    <div class="warning-box">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                        <p>Always consult with your healthcare provider before starting any new supplement regimen
+                            during pregnancy.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="related-vitamins">
+                <h3>Related Vitamins</h3>
+                <div class="related-grid" id="related-vitamins-container">
+                    <!-- This section will be populated with JavaScript -->
+                </div>
+            </div>
+
+            <div class="vitamin-cta">
+                <h3>Not sure which vitamins you need?</h3>
+                <p>Take our personalized pregnancy vitamin assessment to get recommendations tailored to your specific
+                    needs.</p>
+                <a href="#" class="cta-button">Take the assessment</a>
+            </div>
+        </div>
+    </main>
+
+    <button id="scroll-top" class="scroll-top">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="19" x2="12" y2="5"></line>
+            <polyline points="5 12 12 5 19 12"></polyline>
+        </svg>
+    </button>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get the vitamin ID from the URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const vitaminId = window.location.pathname.split('/').pop();
+
+            // Fetch vitamin data from API if needed
+            // For now we'll use the data passed from server side
+
+            // Tab functionality
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    // Remove active class from all tabs
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+
+                    // Add active class to current tab
+                    this.classList.add('active');
+                    const tabId = `tab-${this.dataset.tab}`;
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+
+            // Parse sources text to create visual grid
+            const sourcesText = document.querySelector('#tab-sources p').textContent;
+            const sourcesGrid = document.querySelector('.sources-grid');
+
+            if (sourcesText && sourcesGrid) {
+                // Split by commas and process each source
+                const sources = sourcesText.split(',').map(source => source.trim());
+
+                // Icons for common food sources (this is a simplified version)
+                const foodIcons = {
+                    'spinach': 'leafy-green.svg',
+                    'kale': 'leafy-green.svg',
+                    'broccoli': 'broccoli.svg',
+                    'milk': 'milk.svg',
+                    'yogurt': 'yogurt.svg',
+                    'cheese': 'cheese.svg',
+                    'egg': 'egg.svg',
+                    'eggs': 'egg.svg',
+                    'fish': 'fish.svg',
+                    'meat': 'meat.svg',
+                    'beef': 'meat.svg',
+                    'chicken': 'meat.svg',
+                    'nuts': 'nuts.svg',
+                    'almonds': 'nuts.svg',
+                    'walnuts': 'nuts.svg',
+                    'fruits': 'fruit.svg',
+                    'fruit': 'fruit.svg',
+                    'orange': 'orange.svg',
+                    'citrus': 'orange.svg',
+                    'banana': 'banana.svg',
+                    'apple': 'apple.svg',
+                    'berries': 'berries.svg',
+                    'vegetables': 'vegetable.svg',
+                    'vegetable': 'vegetable.svg',
+                    'carrot': 'carrot.svg',
+                    'tomato': 'tomato.svg',
+                    'beans': 'beans.svg',
+                    'legumes': 'beans.svg',
+                    'lentils': 'lentils.svg',
+                    'grains': 'grain.svg',
+                    'grain': 'grain.svg',
+                    'wheat': 'grain.svg',
+                    'rice': 'rice.svg',
+                    'bread': 'bread.svg',
+                    'cereal': 'cereal.svg',
+                    'seafood': 'seafood.svg',
+                    'water': 'water.svg'
+                };
+
+                // Create a grid item for each source
+                sources.forEach(source => {
+                    if (source) {
+                        const lowerSource = source.toLowerCase();
+                        let iconFile = 'default-food.svg'; // Default icon
+
+                        // Check if we have a specific icon for this food
+                        for (const [key, value] of Object.entries(foodIcons)) {
+                            if (lowerSource.includes(key)) {
+                                iconFile = value;
+                                break;
+                            }
+                        }
+
+                        // Create the source item
+                        const sourceItem = document.createElement('div');
+                        sourceItem.className = 'source-item';
+                        sourceItem.innerHTML = `
+                    <div class="source-icon">
+                        <img src="/static/images/food-icons/${iconFile}" alt="${source}">
+                    </div>
+                    <div class="source-name">${source}</div>
+                `;
+
+                        sourcesGrid.appendChild(sourceItem);
+                    }
+                });
+            }
+
+            // Load related vitamins (example implementation)
+            const relatedVitaminsContainer = document.getElementById('related-vitamins-container');
+
+            // In a real implementation, you would fetch this data from your backend
+            // Example of how to load related vitamins:
+            fetch(`/api/vitamins/{{ vitamin.id }}/related`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.length > 0) {
+                        data.forEach(vitamin => {
+                            const card = document.createElement('div');
+                            card.className = 'related-card';
+                            card.onclick = () => window.location.href = `/vitamins/${vitamin.id}`;
+
+                            card.innerHTML = `
+                        <div class="related-image" style="background-image: url('${vitamin.image}')"></div>
+                        <div class="related-content">
+                            <h4 class="related-title">${vitamin.name}</h4>
+                            <div class="related-dose">${vitamin.recommended_dose}</div>
+                        </div>
+                    `;
+
+                            relatedVitaminsContainer.appendChild(card);
+                        });
+                    } else {
+                        // If no related vitamins, hide the section
+                        document.querySelector('.related-vitamins').style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching related vitamins:', error);
+                    // Fallback with sample data for demonstration
+                    loadSampleRelatedVitamins();
+                });
+
+            // Fallback function with sample data (for demonstration)
+            function loadSampleRelatedVitamins() {
+                const sampleVitamins = [
+                    {
+                        id: 1,
+                        name: 'Vitamin D',
+                        recommended_dose: '600-800 IU',
+                        image: '/static/images/vitamins/vitamin-d.jpg'
+                    },
+                    {id: 2, name: 'Calcium', recommended_dose: '1000 mg', image: '/static/images/vitamins/calcium.jpg'},
+                    {
+                        id: 3,
+                        name: 'Magnesium',
+                        recommended_dose: '350-400 mg',
+                        image: '/static/images/vitamins/magnesium.jpg'
+                    }
+                ];
+
+                sampleVitamins.forEach(vitamin => {
+                    const card = document.createElement('div');
+                    card.className = 'related-card';
+                    card.onclick = () => window.location.href = `/vitamins/${vitamin.id}`;
+
+                    card.innerHTML = `
+                <div class="related-image" style="background-image: url('${vitamin.image}')"></div>
+                <div class="related-content">
+                    <h4 class="related-title">${vitamin.name}</h4>
+                    <div class="related-dose">${vitamin.recommended_dose}</div>
+                </div>
+            `;
+
+                    relatedVitaminsContainer.appendChild(card);
+                });
+            }
+
+            // Setup scroll to top button
+            const scrollTopBtn = document.getElementById('scroll-top');
+
+            window.addEventListener('scroll', function () {
+                if (window.pageYOffset > 300) {
+                    scrollTopBtn.classList.add('show');
+                } else {
+                    scrollTopBtn.classList.remove('show');
+                }
+            });
+
+            scrollTopBtn.addEventListener('click', function () {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+{% endblock %}

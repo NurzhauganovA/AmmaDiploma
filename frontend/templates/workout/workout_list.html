@@ -1,0 +1,542 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Amma - Workouts for pregnancy mothers{% endblock %}
+
+{% block links %}
+    <link rel="stylesheet" href="{% static 'workout/css/workout.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap"
+          rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div class="workout-page">
+        <div class="hero-section">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="page-title">Pregnancy Workouts</h1>
+                    <p class="page-subtitle">Safe and effective exercises to maintain health during pregnancy</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="filter-section">
+                <div class="filter-tabs">
+                    <div class="filter-group">
+                        <h3 class="filter-title">Categories</h3>
+                        <div class="filter-options">
+                            <a href="{% url 'workout_list' %}"
+                               class="filter-pill {% if not category %}active{% endif %}">
+                                All Categories
+                            </a>
+                            {% for cat in categories %}
+                                <a href="{% url 'workout_list_by_category' cat.slug %}"
+                                   class="filter-pill {% if category.id == cat.id %}active{% endif %}">
+                                    {% if cat.icon %}<i class="icon {{ cat.icon }}"></i>{% endif %}
+                                    {{ cat.name }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <h3 class="filter-title">Trimester</h3>
+                        <div class="filter-options">
+                            <a href="{% url 'workout_list' %}"
+                               class="filter-pill {% if not current_trimester %}active{% endif %}">
+                                All Trimesters
+                            </a>
+                            {% for trim_id, trim_name in trimester_choices.items %}
+                                {% if trim_id != 0 %} <!-- Skip "All Trimesters" -->
+                                    <a href="{% url 'workout_list_by_trimester' trim_id %}"
+                                       class="filter-pill {% if current_trimester == trim_id %}active{% endif %}">
+                                        {{ trim_name }}
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                {% if category or current_trimester %}
+                    <div class="active-filters">
+                        <div class="filter-summary">
+                            <span>Showing:</span>
+                            {% if category %}
+                                <div class="active-filter">
+                                    {{ category.name }}
+                                    <a href="{% url 'workout_list' %}" class="remove-filter">×</a>
+                                </div>
+                            {% endif %}
+
+                            {% if current_trimester %}
+                                <div class="active-filter">
+                                    {% if current_trimester == 1 %}
+                                        First trimester
+                                    {% elif current_trimester == 2 %}
+                                        Second trimester
+                                    {% elif current_trimester == 3 %}
+                                        Third trimester
+                                    {% else %}
+                                        {{ current_trimester }}
+                                    {% endif %}
+                                    <a href="{% url 'workout_list' %}" class="remove-filter">×</a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="workout-grid">
+                {% for workout in workouts %}
+                    <div class="workout-card">
+                        <div class="card-image">
+                            {% if workout.image %}
+                                <img src="{{ workout.image.url }}" alt="{{ workout.name }}" class="workout-img">
+                            {% else %}
+                                <img src="{% static 'images/workout-placeholder.jpg' %}" alt="{{ workout.name }}"
+                                     class="workout-img">
+                            {% endif %}
+
+                            <div class="card-duration">{{ workout.duration }} min</div>
+
+                            {% if workout.trimester == 0 %}
+                                <div class="card-trimester all">All Trimesters</div>
+                            {% else %}
+                                <div class="card-trimester t{{ workout.trimester }}">{{ workout.get_trimester_display }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="card-content">
+                            <div class="card-category">{{ workout.category.name }}</div>
+
+                            <h3 class="card-title">
+                                <a href="{{ workout.get_absolute_url }}">{{ workout.name }}</a>
+                            </h3>
+
+                            <div class="card-difficulty">
+                                <span class="difficulty-label">Difficulty:</span>
+                                <div class="difficulty-stars">
+                                    {% for i in "12345" %}
+                                        <span class="star {% if forloop.counter <= workout.difficulty.value %}active{% endif %}">★</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <p class="card-description">{{ workout.description|truncatechars:120 }}</p>
+
+                            <div class="card-footer">
+                                <a href="{{ workout.get_absolute_url }}" class="view-button">View Workout</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="no-results">
+                        <div class="no-results-icon">
+                            <i class="icon-search"></i>
+                        </div>
+                        <h3>No Workouts Found</h3>
+                        <p>Try changing your filter selections or check back later for new workouts.</p>
+                        <a href="{% url 'workout_list' %}" class="reset-filters-btn">Reset Filters</a>
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% if workouts.has_other_pages %}
+                <div class="pagination-container">
+                    <div class="pagination">
+                        {% if workouts.has_previous %}
+                            <a href="?page={{ workouts.previous_page_number }}" class="page-link prev"
+                               aria-label="Previous page">
+                                <i class="icon-arrow-left"></i>
+                            </a>
+                        {% endif %}
+
+                        {% for i in workouts.paginator.page_range %}
+                            {% if workouts.number == i %}
+                                <span class="page-link active">{{ i }}</span>
+                            {% else %}
+                                <a href="?page={{ i }}" class="page-link">{{ i }}</a>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if workouts.has_next %}
+                            <a href="?page={{ workouts.next_page_number }}" class="page-link next"
+                               aria-label="Next page">
+                                <i class="icon-arrow-right"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Calendar Modal -->
+    <div class="schedule-modal" id="calendar-modal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <div class="modal-header">
+                <h2>Schedule Workout</h2>
+                <p>Add "<span id="workout-name-placeholder"></span>" to your pregnancy calendar</p>
+            </div>
+
+            <form id="add-to-calendar-form">
+                <input type="hidden" id="workout-id" name="workout-id">
+                <div class="form-group">
+                    <label for="workout-date">When would you like to do this workout?</label>
+                    <input type="date" id="workout-date" name="workout-date" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="workout-time">What time works best for you?</label>
+                    <input type="time" id="workout-time" name="workout-time" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="workout-reminder">Would you like a reminder?</label>
+                    <select id="workout-reminder" name="workout-reminder">
+                        <option value="15">15 minutes before</option>
+                        <option value="30" selected>30 minutes before</option>
+                        <option value="60">1 hour before</option>
+                        <option value="120">2 hours before</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="modal-submit">Add to Calendar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Success notification -->
+    <div class="notification success" id="success-notification">
+        <div class="notification-icon">✓</div>
+        <div class="notification-content">
+            <h4>Workout Scheduled!</h4>
+            <p>Successfully added to your calendar.</p>
+        </div>
+        <button class="notification-close">&times;</button>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        // Improved Workout List Page - Interactive functionality
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Modal functionality
+            const scheduleButtons = document.querySelectorAll('.schedule-button');
+            const modal = document.getElementById('calendar-modal');
+            const modalOverlay = document.querySelector('.modal-overlay');
+            const modalClose = document.querySelector('.modal-close');
+            const workoutNamePlaceholder = document.getElementById('workout-name-placeholder');
+            const workoutIdInput = document.getElementById('workout-id');
+            const calendarForm = document.getElementById('add-to-calendar-form');
+            const notification = document.getElementById('success-notification');
+            const notificationClose = document.querySelector('.notification-close');
+
+            // Show modal when clicking schedule button
+            if (scheduleButtons.length > 0) {
+                scheduleButtons.forEach(button => {
+                    button.addEventListener('click', function () {
+                        const workoutId = this.getAttribute('data-workout-id');
+                        const workoutName = this.getAttribute('data-workout-name');
+
+                        // Set workout data in modal
+                        workoutIdInput.value = workoutId;
+                        workoutNamePlaceholder.textContent = workoutName;
+
+                        // Show modal
+                        modal.style.display = 'block';
+                        document.body.style.overflow = 'hidden'; // Prevent scrolling
+
+                        // Set default date and time values
+                        setDefaultDateTime();
+                    });
+                });
+            }
+
+            // Hide modal when clicking close button
+            if (modalClose) {
+                modalClose.addEventListener('click', function () {
+                    closeModal();
+                });
+            }
+
+            // Hide modal when clicking outside
+            if (modalOverlay) {
+                modalOverlay.addEventListener('click', function () {
+                    closeModal();
+                });
+            }
+
+            // Close modal function
+            function closeModal() {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto'; // Enable scrolling
+            }
+
+            // Set default date and time values
+            function setDefaultDateTime() {
+                const now = new Date();
+
+                // Format date (YYYY-MM-DD)
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                const dateValue = `${year}-${month}-${day}`;
+
+                // Format time (HH:MM)
+                let hours = now.getHours();
+                if (hours < 8) hours = 8; // Default to 8 AM if it's earlier
+                if (hours > 18) hours = 18; // Default to 6 PM if it's later
+                const minutes = '00'; // Default to on the hour
+                const timeValue = `${String(hours).padStart(2, '0')}:${minutes}`;
+
+                // Set form values
+                document.getElementById('workout-date').value = dateValue;
+                document.getElementById('workout-time').value = timeValue;
+
+                // Set min date to today
+                document.getElementById('workout-date').min = dateValue;
+            }
+
+            // Handle form submission
+            if (calendarForm) {
+                calendarForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    const workoutId = document.getElementById('workout-id').value;
+                    const workoutDate = document.getElementById('workout-date').value;
+                    const workoutTime = document.getElementById('workout-time').value;
+                    const workoutReminder = document.getElementById('workout-reminder').value;
+
+                    // Prepare request data
+                    const requestData = {
+                        workout_id: workoutId,
+                        date: workoutDate,
+                        time: workoutTime,
+                        reminder: workoutReminder
+                    };
+
+                    // Call function to save workout to calendar
+                    saveWorkoutToCalendar(requestData)
+                        .then(response => {
+                            // Close modal
+                            closeModal();
+
+                            // Show success notification
+                            showNotification();
+                        })
+                        .catch(error => {
+                            console.error('Error saving workout:', error);
+                            alert('There was an error adding the workout to your calendar. Please try again.');
+                        });
+                });
+            }
+
+            // Show notification function
+            function showNotification() {
+                notification.classList.add('show');
+
+                // Auto-hide notification after 5 seconds
+                setTimeout(() => {
+                    hideNotification();
+                }, 5000);
+            }
+
+            // Hide notification function
+            function hideNotification() {
+                notification.classList.remove('show');
+            }
+
+            // Close notification when clicking the X
+            if (notificationClose) {
+                notificationClose.addEventListener('click', function () {
+                    hideNotification();
+                });
+            }
+
+            // Function to save workout to calendar
+            function saveWorkoutToCalendar(workoutData) {
+                // In a real implementation, this would be an AJAX call to your backend
+                // For demo purposes, we'll return a resolved promise
+
+                return new Promise((resolve, reject) => {
+                    // Simulate API call delay
+                    setTimeout(() => {
+                        // This is where you'd make the actual AJAX request to your backend
+                        // Example fetch request (commented out):
+                        /*
+                        fetch('/workouts/add-to-calendar/', {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': getCookie('csrftoken')
+                          },
+                          body: JSON.stringify(workoutData)
+                        })
+                        .then(response => {
+                          if (!response.ok) {
+                            throw new Error('Server error');
+                          }
+                          return response.json();
+                        })
+                        .then(data => {
+                          resolve(data);
+                        })
+                        .catch(error => {
+                          reject(error);
+                        });
+                        */
+
+                        // For demo, just resolve the promise
+                        resolve({
+                            success: true,
+                            message: 'Workout successfully added to calendar',
+                            id: 123 // Demo ID
+                        });
+                    }, 800); // Simulate network delay
+                });
+            }
+
+            // Function to get CSRF token
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+
+            // Add animation on scroll for page elements
+            const animatedElements = document.querySelectorAll('.workout-card');
+
+            // Staggered animation for workout cards
+            function setupAnimations() {
+                // Add animation class to elements
+                animatedElements.forEach((el, index) => {
+                    el.classList.add('animate-in');
+                    el.style.transitionDelay = `${index * 0.1}s`;
+                });
+            }
+
+            // Add animation styles
+            const styleEl = document.createElement('style');
+            styleEl.textContent = `
+    .workout-card {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .workout-card.animate-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .filter-pill {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .filter-pill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.3);
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+    }
+
+    .filter-pill:hover::after {
+      transform: translateX(0) translateX(100%);
+    }
+  `;
+            document.head.appendChild(styleEl);
+
+            // Run animations after a short delay
+            setTimeout(setupAnimations, 100);
+
+            // Handle active filter highlighting
+            const filterPills = document.querySelectorAll('.filter-pill');
+
+            // Filter selection feedback
+            filterPills.forEach(pill => {
+                pill.addEventListener('click', function (e) {
+                    // Add a visual feedback effect when clicking
+                    const ripple = document.createElement('span');
+                    ripple.classList.add('ripple-effect');
+                    this.appendChild(ripple);
+
+                    // Remove ripple after animation completes
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 800);
+                });
+            });
+
+            // Add ripple effect style
+            const rippleStyle = document.createElement('style');
+            rippleStyle.textContent = `
+    .filter-pill {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ripple-effect {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 0;
+      height: 0;
+      background-color: rgba(255, 255, 255, 0.7);
+      border-radius: 50%;
+      opacity: 0.6;
+      animation: ripple 0.8s ease-out;
+    }
+
+    @keyframes ripple {
+      to {
+        width: 300px;
+        height: 300px;
+        opacity: 0;
+      }
+    }
+  `;
+            document.head.appendChild(rippleStyle);
+
+            // Add smooth scroll to pagination clicks
+            const paginationLinks = document.querySelectorAll('.page-link');
+
+            paginationLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    // Store the current scroll position before page reload
+                    sessionStorage.setItem('scrollPosition', window.scrollY);
+                });
+            });
+
+            // Check if coming back from pagination
+            if (sessionStorage.getItem('scrollPosition')) {
+                // Restore scroll position
+                window.scrollTo(0, parseInt(sessionStorage.getItem('scrollPosition')));
+                // Clear storage
+                sessionStorage.removeItem('scrollPosition');
+            }
+        });
+    </script>
+{% endblock %}

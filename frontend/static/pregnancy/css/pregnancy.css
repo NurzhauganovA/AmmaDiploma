@@ -1,0 +1,85 @@
+.photo_main_content_block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.img_block_photo_main img {
+    width: 650px;
+    height: 470px;
+}
+
+.word_block_photo_main {
+    background-color: rgb(240, 245, 255);
+    width: 450px;
+    height: 470px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 100px;
+    text-align: center;
+}
+
+.word_block_photo_main h1 {
+    font-weight: 700;
+    font-size: 39px;
+    color: #333;
+    margin: 60px 0 40px 0;
+}
+
+.word_block_photo_main p {
+    font-weight: 600;
+    font-size: 16px;
+    color: #555;
+    line-height: 1.6;
+}
+
+.background_image {
+    width: 250px;
+    height: 130px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: absolute;
+    z-index: 999;
+    margin: 340px 400px 0 0;
+}
+
+.tools_section {
+    margin-top: 60px;
+    text-align: center;
+}
+
+.tools_section h2 {
+    font-size: 32px;
+    font-weight: 500;
+    margin-bottom: 50px;
+}
+
+.tools_container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.tool {
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.tool img {
+    width: 110px;
+    height: 110px;
+    margin-bottom: 20px;
+}
+
+.tool p {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+}

@@ -1,0 +1,110 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block links %}
+    <link rel="stylesheet" href="{% static 'pregnancy/css/gain_calculator.css' %}">
+{% endblock %}
+
+{% block title %} Amma - Pregnancy Weight Gain Calculator {% endblock %}
+
+{% block page_title %} Pregnancy Weight Gain Calculator {% endblock %}
+
+{% block content %}
+    <div class="calculator-wrapper">
+        <div class="calculator-header-icon">
+            <img src="https://assets.babycenter.com/ims/2023/11/PregWeightGainCalc-nov-2023.svg" alt="">
+        </div>
+        <div class="calculator-header">
+            <h2>Pregnancy Weight Gain Calculator</h2>
+        </div>
+        <form class="calculator-form" id="pregnancyCalcForm">
+            <div>
+                <label class="text" for="preWeight">Your pre-pregnancy weight</label>
+                <div class="row">
+                    <input type="number" id="preWeight" placeholder="0"/>
+                    <span>kg</span>
+                </div>
+            </div>
+            <div>
+                <label class="text" for="currentWeight">Your weight right now</label>
+                <div class="row">
+                    <input type="number" id="currentWeight" placeholder="0"/>
+                    <span>kg</span>
+                </div>
+            </div>
+            <div>
+                <label class="text" for="heightFt">Your height</label>
+                <div class="row">
+                    <input type="number" id="heightFt" placeholder="0"/>
+                    <span>ft</span>
+                    <input type="number" id="heightIn" placeholder="0"/>
+                    <span>cm</span>
+                </div>
+            </div>
+            <div>
+                <label for="weekSelect">Your week of pregnancy</label>
+                <select id="weekSelect">
+                </select>
+            </div>
+            <button type="button" class="calculate-btn" id="calculateBtn">Calculate</button>
+        </form>
+        <div id="dueDateResult" class="result">
+        </div>
+    </div>
+    <div class="main_content_due_date_calculator">
+        <h1>How much weight should I gain during pregnancy?</h1>
+        <p>The amount of pregnancy weight you're recommended to gain depends on where you started out: underweight, at a healthy weight, overweight, or obese (and whether you’re carrying twins or multiples).</p>
+        <p>This tool will calculate your pre-pregnancy BMI (body mass index), give you a recommendation for pregnancy weight gain, and generate a pregnancy weight gain chart to show how you're tracking toward your target weight range.</p>
+        <p>But keep in mind that your recommended weight gain may be different depending on your health needs and any pregnancy complications. Especially if you're overweight, obese, or underweight, it's important to talk to your doctor or midwife and use pregnancy weight gain information that's customized for you.</p>
+        <h1>What moms say about pregnancy weight gain</h1>
+        <p>Some moms stress about gaining too much, while others are anxious about gaining enough. It’s normal to have questions and concerns as your body changes to support your pregnancy. Check in regularly with your doctor or midwife about pregnancy weight gain, but try not to worry too much. In the BabyCenter Community, moms share their advice.</p>
+        <p>IMPORTANT: The Pregnancy Weight Gain Calculator is a general educational aid only and should not be relied on as a substitute for the monitoring of your weight by your doctor, midwife, or other healthcare providers.</p>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+
+    <script>
+        document.getElementById('weekSelect').innerHTML = `
+            {#from 4 to 41 weeks#}
+            ${Array.from({ length: 38 }, (_, i) => i + 4)
+                .map((week) => `<option value="${week}">${week} weeks</option>`)
+                .join('')}
+        `;
+
+        document.getElementById('calculateBtn').addEventListener('click', function() {
+        const preWeight = parseFloat(document.getElementById('preWeight').value);
+        const currentWeight = parseFloat(document.getElementById('currentWeight').value);
+        const heightFt = parseFloat(document.getElementById('heightFt').value);
+        const heightIn = parseFloat(document.getElementById('heightIn').value);
+        const week = parseInt(document.getElementById('weekSelect').value);
+
+        if (isNaN(preWeight) || isNaN(currentWeight) || isNaN(heightFt) || isNaN(heightIn)) {
+            alert("Please fill in all fields correctly.");
+            return;
+        }
+
+        // Calculate the BMI
+        const heightInCm = (heightFt * 30.48) + (heightIn * 2.54); // Convert to cm
+        const bmi = (preWeight / (heightInCm / 100) ** 2).toFixed(1);
+
+        // Pregnancy weight gain recommendation based on week of pregnancy
+        let weightGain = (currentWeight - preWeight).toFixed(2);
+
+        // Display the results
+        let resultText = `<h1>Your BMI is ${bmi}</h1><h1>Your weight gain: ${weightGain} kg.</h1>`;
+
+        // Add different images or text depending on the pregnancy week
+        if (week <= 13) {
+            resultText += `<h1>First trimester</h1>`;
+        } else if (week > 13 && week <= 27) {
+            resultText += `<h1>Second trimester</h1>`;
+        } else {
+            resultText += `<h1>Third trimester</h1>`;
+        }
+
+        document.getElementById('dueDateResult').innerHTML = resultText;
+    });
+    </script>
+
+{% endblock %}

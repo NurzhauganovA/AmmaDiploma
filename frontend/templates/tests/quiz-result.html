@@ -1,0 +1,46 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block links %}
+    <link rel="stylesheet" href="{% static 'tests/css/tests-detail.css' %}">
+{% endblock %}
+
+{% block title %} Amma - Home {% endblock %}
+
+{% block page_title %} Home {% endblock %}
+
+{% block content %}
+    
+    <section>
+        <div class="wrapper">
+            <div class="section_container">
+                <div class="image_block_background_test_data">
+                    <div class="image_block_test_data" style="background-image: url('{{ quiz_result.test.image.url }}')"></div>
+                </div>
+                <div class="main_info_block_test_data">
+                    <h1>Your result</h1>
+                    <p>{{ quiz_result_text }}</p>
+                </div>
+
+                {% for message in messages %}
+                    <div class="successfully_test_completed_block">
+                        <h1>{{ message }}</h1>
+                        <span id="ok">Ok</span>
+                    </div>
+                {% endfor %}
+
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block scripts %}
+    
+    <script>
+        document.getElementById('ok').addEventListener('click', () => {
+            document.querySelector('.successfully_test_completed_block').style.display = 'none';
+        })
+    </script>
+
+{% endblock %}

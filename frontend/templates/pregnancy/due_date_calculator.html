@@ -1,0 +1,146 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block links %}
+    <link rel="stylesheet" href="{% static 'pregnancy/css/due_date_calculator.css' %}">
+{% endblock %}
+
+{% block title %} Amma - Due Date Calculator {% endblock %}
+
+{% block page_title %} Due Date Calculator {% endblock %}
+
+{% block content %}
+    <div class="calculator-wrapper">
+        <div class="calculator-header-icon">
+            <img src="https://assets.babycenter.com/ims/2023/11/DueDateCalculator-nov-2023.svg" alt="">
+        </div>
+        <div class="calculator-header">
+            <h2>Pregnancy Due Date Calculator</h2>
+        </div>
+        <form class="calculator-form" id="dueDateCalcForm">
+            <div class="row">
+                <label for="calcMethod">Calculation method</label>
+                <select id="calcMethod" class="form-control">
+                    <option value="last_period">Last period</option>
+                    <option value="conception_date">Conception date</option>
+                </select>
+            </div>
+            <div class="row lastPeriod">
+                <label for="lastPeriod">When did your last period start?</label>
+                <input type="date" id="lastPeriod" value="2025-04-14"/>
+            </div>
+            <div class="row cycleLength">
+                <label for="cycleLength">Cycle length</label>
+                <select id="cycleLength" class="form-control">
+                    <option value="20">20 days</option>
+                    <option value="21">21 days</option>
+                    <option value="22">22 days</option>
+                    <option value="23">23 days</option>
+                    <option value="24">24 days</option>
+                    <option value="25">25 days</option>
+                    <option value="26">26 days</option>
+                    <option value="27">27 days</option>
+                    <option value="28">28 days</option>
+                    <option value="29">29 days</option>
+                    <option value="30">30 days</option>
+                    <option value="31">31 days</option>
+                    <option value="32">32 days</option>
+                    <option value="33">33 days</option>
+                    <option value="34">34 days</option>
+                    <option value="35">35 days</option>
+                    <option value="36">36 days</option>
+                    <option value="37">37 days</option>
+                    <option value="38">38 days</option>
+                    <option value="39">39 days</option>
+                    <option value="40">40 days</option>
+                    <option value="41">41 days</option>
+                    <option value="42">42 days</option>
+                    <option value="43">43 days</option>
+                    <option value="44">44 days</option>
+                    <option value="45">45 days</option>
+                </select>
+            </div>
+            <div class="row conceptionDateRow" id="conceptionDateRow" style="display:none;">
+                <label for="conceptionDate">When did you conceive?</label>
+                <input type="date" id="conceptionDate" value="2025-04-14" class="form-control"/>
+            </div>
+            <div class="row">
+                <button type="button" class="btn form-control" id="seeTimelineBtn">See your timeline</button>
+            </div>
+        </form>
+        <div id="dueDateResult" class="result">
+        </div>
+    </div>
+    <div class="main_content_due_date_calculator">
+        <h1>Amma's Due Date Calculator</h1>
+        <p>Use our pregnancy calculator by plugging in the date of your last period, the date you conceived if you know it. The Due Date Calculator will do the rest!</p>
+        <h1>How is my due date calculated?</h1>
+        <p>There are several ways your due date is determined. If you happen to know the day you conceived, you can count 38 weeks from that day to find your due date. (Human gestation takes about 38 weeks.)</p>
+        <p>But very few expectant moms know exactly when they conceived. Even if you only had sex once during your fertile period, you wouldn't conceive on that day unless you happen to be ovulating.</p>
+        <p>Sperm can live for up to five days inside your fallopian tubes. Meaning it could be up to five days after you have sex that you release an egg (ovulate) and it gets fertilized by a waiting sperm. That's the day you conceive.</p>
+        <p>So without knowing the day of conception, how does anyone determine a due date?</p>
+        <h1>First day of your last period</h1>
+        <p>The most common way to calculate your pregnancy due date is by counting 40 weeks from the first day of your last menstrual period (LMP) (or choosing that option from our tool’s menu above). And that's how most healthcare providers do it.</p>
+        <p>If your menstrual cycle length is the average length (28-day cycle), your period probably started about two weeks before you conceived. This explains why pregnancies are said to last 40 weeks instead of 38 weeks.</p>
+        <p>This method doesn't take into account how long your cycle actually is or when you think you might have conceived. But generally speaking, women typically ovulate about two weeks after their menstrual cycle starts. And women are more likely to know when their last period started than the day they ovulated.</p>
+        <p>If you know the first day of your last menstrual period, you can use our Due Date Calculator to predict your estimated due date.></p>
+        <h1>Conception date</h1>
+        <p>If you do happen to know precisely when you conceived – say, if you were using an ovulation predictor kit or tracking your ovulation symptoms – you can calculate your pregnancy due date based on your conception date. Just choose that calculation method from the pulldown above and put in your date.</p>
+        <p>Remember, you don't necessarily conceive on the day you have sex.</p>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+
+    <script>
+        document.getElementById('calcMethod').addEventListener('change', function() {
+            const method = this.value;
+            const cycleLength = document.getElementById('cycleLength');
+            const lastPeriod = document.getElementById('lastPeriod');
+            const conceptionDateRow = document.getElementById('conceptionDateRow');
+
+            if (method === 'last_period') {
+                document.querySelector('.cycleLength').style.display = 'flex';
+                document.querySelector('.conceptionDateRow').style.display = 'none';
+                document.querySelector('.lastPeriod').style.display = 'flex';
+            } else if (method === 'conception_date') {
+                document.querySelector('.cycleLength').style.display = 'none';
+                document.querySelector('.conceptionDateRow').style.display = 'flex';
+                document.querySelector('.lastPeriod').style.display = 'none';
+            }
+        });
+
+        document.getElementById('seeTimelineBtn').addEventListener('click', function() {
+            const method = document.getElementById('calcMethod').value;
+            let dueDate = '';
+            let imageSrc = '';
+
+            if (method === 'last_period') {
+                const lastPeriodDate = new Date(document.getElementById('lastPeriod').value);
+                const cycleLength = parseInt(document.getElementById('cycleLength').value, 10);
+                // Расчет на основе последнего периода
+                dueDate = new Date(lastPeriodDate.setDate(lastPeriodDate.getDate() + (280 - cycleLength)));
+            } else if (method === 'conception_date') {
+                const conceptionDate = new Date(document.getElementById('conceptionDate').value);
+                // Расчет на основе дня зачатия
+                dueDate = new Date(conceptionDate.setDate(conceptionDate.getDate() + 266));
+            }
+
+            // Выводим результат
+            document.getElementById('dueDateResult').innerHTML = `
+                <div class="due_date_result">
+                    <img src="https://assets.babycenter.com/ims/2023/11/DueDateCalculator-nov-2023.svg" alt="">
+                    <h2>Congrats! Your due date is</h2>
+                    <h1 id="dueDateResultText"></h1>
+                </div>
+            `;
+            document.getElementById('dueDateResultText').textContent = `${dueDate.toLocaleDateString('en-US', {
+                weekday: 'long', // Выводит день недели
+                year: 'numeric', // Полный год
+                month: 'long', // Полное название месяца
+                day: 'numeric' // Число
+            })}`;
+        });
+    </script>
+
+{% endblock %}

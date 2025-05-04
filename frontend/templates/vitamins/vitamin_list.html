@@ -1,0 +1,268 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Amma - Vitamins for expectant mothers{% endblock %}
+
+{% block links %}
+    <link rel="stylesheet" href="{% static 'vitamin/css/vitamin.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <main class="container">
+        <section class="page-title">
+            <h2>Vitamins for pregnant women</h2>
+            <p>A complete guide to essential vitamins and minerals for each trimester of pregnancy. Get information on dosages, natural sources, and benefits for you and your baby.</p>
+        </section>
+
+        <div class="search-box">
+            <input type="text" placeholder="Search for vitamins..." id="vitamin-search">
+            <button>
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </button>
+        </div>
+
+        <section class="filter-section">
+            <h3 class="filter-title">Vitamin filter</h3>
+            <div class="filter-options">
+                <div class="filter-tag active" data-filter="all">All vitamins</div>
+                <div class="filter-tag" data-filter="trimester-1">First trimester</div>
+                <div class="filter-tag" data-filter="trimester-2">Second trimester</div>
+                <div class="filter-tag" data-filter="trimester-3">Third trimester</div>
+                <div class="filter-tag" data-filter="critical">Critically important</div>
+            </div>
+        </section>
+
+        <div class="vitamins-grid" id="vitamins-container">
+            <!-- Vitamin cards will be loaded here -->
+        </div>
+
+        <div class="pagination" id="pagination">
+            <!-- Pagination buttons will be generated here -->
+        </div>
+    </main>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        const vitaminsData = [
+            {% for vitamin in vitamins %}
+                {
+                    id: {{ vitamin.id }},
+                    name: "{{ vitamin.name }}",
+                    description: "{{ vitamin.description }}",
+                    "recommended_dose": "{{ vitamin.recommended_dose }}",
+                    side_effects: "{{ vitamin.side_effects }}",
+                    sources: "{{ vitamin.sources }}",
+                    image: "{{ vitamin.image.url }}",
+                    trimester: [
+                        {% if vitamin.trimester_1 %}"trimester-1",{% endif %}
+                        {% if vitamin.trimester_2 %}"trimester-2",{% endif %}
+                        {% if vitamin.trimester_3 %}"trimester-3",{% endif %}
+                        {% if vitamin.critical %}"critical",{% endif %}
+                    ]
+                },
+            {% endfor %}
+        ]
+        console.log("vitaminsData", vitaminsData);
+        let currentPage = 1;
+        const itemsPerPage = 6;
+        let filteredVitamins = [...vitaminsData];
+
+        // Load vitamins when the page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            loadVitamins(filteredVitamins);
+            setupPagination(filteredVitamins);
+
+            // Setup scroll to top button
+            const scrollTopBtn = document.getElementById('scroll-top');
+
+            window.addEventListener('scroll', function () {
+                if (window.pageYOffset > 300) {
+                    scrollTopBtn.classList.add('show');
+                } else {
+                    scrollTopBtn.classList.remove('show');
+                }
+            });
+
+            scrollTopBtn.addEventListener('click', function () {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Setup filter tags
+        document.querySelectorAll('.filter-tag').forEach(tag => {
+            tag.addEventListener('click', function () {
+                document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                const filter = this.dataset.filter;
+                if (filter === 'all') {
+                    filteredVitamins = [...vitaminsData];
+                } else {
+                    filteredVitamins = vitaminsData.filter(v => v.trimester.includes(filter));
+                }
+                currentPage = 1;
+                loadVitamins(filteredVitamins);
+                setupPagination(filteredVitamins);
+            });
+        });
+
+        // Setup search
+        let searchInput = document.querySelector('#vitamin-search');
+        searchInput.addEventListener('input', function () {
+            const searchTerm = this.value.toLowerCase();
+
+            if (searchTerm === '') {
+                // Reset to current filter
+                const activeFilter = document.querySelector('.filter-tag.active').getAttribute('data-filter');
+                if (activeFilter === 'all') {
+                    filteredVitamins = [...vitaminsData];
+                } else {
+                    filteredVitamins = vitaminsData.filter(vitamin => vitamin.trimester.includes(activeFilter));
+                }
+            } else {
+                // Apply search within current filter
+                const activeFilter = document.querySelector('.filter-tag.active').getAttribute('data-filter');
+                if (activeFilter === 'all') {
+                    filteredVitamins = vitaminsData.filter(vitamin =>
+                        vitamin.name.toLowerCase().includes(searchTerm) ||
+                        vitamin.description.toLowerCase().includes(searchTerm) ||
+                        vitamin.sources.toLowerCase().includes(searchTerm)
+                    );
+                } else {
+                    filteredVitamins = vitaminsData.filter(vitamin =>
+                        vitamin.trimester.includes(activeFilter) &&
+                        (vitamin.name.toLowerCase().includes(searchTerm) ||
+                            vitamin.description.toLowerCase().includes(searchTerm) ||
+                            vitamin.sources.toLowerCase().includes(searchTerm))
+                    );
+                }
+            }
+
+            currentPage = 1;
+            loadVitamins(filteredVitamins);
+            setupPagination(filteredVitamins);
+        });
+
+        // Function to load vitamins
+        function loadVitamins(vitamins) {
+            const container = document.getElementById('vitamins-container');
+            container.innerHTML = '';
+
+            // Calculate start and end index for current page
+            const startIdx = (currentPage - 1) * itemsPerPage;
+            const endIdx = startIdx + itemsPerPage;
+            const paginatedVitamins = vitamins.slice(startIdx, endIdx);
+
+            if (paginatedVitamins.length === 0) {
+                container.innerHTML = '<div class="no-results"><p>Vitamins not found. Please change your search parameters.</p></div>';
+                return;
+            }
+
+            paginatedVitamins.forEach(vitamin => {
+                const card = document.createElement('div');
+                card.className = 'vitamin-card';
+                card.setAttribute('data-id', vitamin.id);
+
+                // Create image placeholder with gradient if no image
+                let imgSrc = vitamin.image || 'default-vitamin.jpg';
+
+                card.innerHTML = `
+                    <div class="vitamin-image" style="background-image: url('${imgSrc}')"></div>
+                    <div class="vitamin-content">
+                        <div class="vitamin-title">
+                            <h3>${vitamin.name}</h3>
+                            <span class="vitamin-dose">${vitamin.recommended_dose.split(' ')[0]}</span>
+                        </div>
+                        <p class="vitamin-description">${vitamin.description}</p>
+                        <p class="vitamin-sources"><span>Sources:</span> ${vitamin.sources}</p>
+                    </div>
+                `;
+
+                // Add click event to view vitamin details
+                card.addEventListener('click', function () {
+                    window.location.href = `/vitamins/${vitamin.id}`;
+                });
+
+                container.appendChild(card);
+            });
+        }
+
+        // Function to setup pagination
+        function setupPagination(vitamins) {
+            const totalPages = Math.ceil(vitamins.length / itemsPerPage);
+            const paginationContainer = document.getElementById('pagination');
+            paginationContainer.innerHTML = '';
+
+            // Don't show pagination if there's only one page
+            if (totalPages <= 1) return;
+
+            // Previous button
+            if (currentPage > 1) {
+                const prevBtn = document.createElement('button');
+                prevBtn.innerHTML = '&laquo;';
+                prevBtn.addEventListener('click', function () {
+                    currentPage--;
+                    loadVitamins(vitamins);
+                    setupPagination(vitamins);
+                    window.scrollTo({
+                        top: document.querySelector('.page-title').offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                });
+                paginationContainer.appendChild(prevBtn);
+            }
+
+            // Page buttons
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, startPage + 4);
+
+            if (endPage - startPage < 4) {
+                startPage = Math.max(1, endPage - 4);
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.textContent = i;
+
+                if (i === currentPage) {
+                    pageBtn.classList.add('active');
+                }
+
+                pageBtn.addEventListener('click', function () {
+                    currentPage = i;
+                    loadVitamins(vitamins);
+                    setupPagination(vitamins);
+                    window.scrollTo({
+                        top: document.querySelector('.page-title').offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                });
+
+                paginationContainer.appendChild(pageBtn);
+            }
+
+            // Next button
+            if (currentPage < totalPages) {
+                const nextBtn = document.createElement('button');
+                nextBtn.innerHTML = '&raquo;';
+                nextBtn.addEventListener('click', function () {
+                    currentPage++;
+                    loadVitamins(vitamins);
+                    setupPagination(vitamins);
+                    window.scrollTo({
+                        top: document.querySelector('.page-title').offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                });
+                paginationContainer.appendChild(nextBtn);
+            }
+        }
+    </script>
+{% endblock %}

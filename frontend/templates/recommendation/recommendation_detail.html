@@ -1,0 +1,31 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block links %}
+    <link rel="stylesheet" href="{% static 'recommendation/css/recommendation_detail.css' %}">
+{% endblock %}
+
+{% block title %} Amma - {{ recommendation.title }} {% endblock %}
+
+{% block page_title %} {{ recommendation.title }} {% endblock %}
+
+{% block content %}
+    <div class="recommendation-container">
+        <div class="recommendation-content">
+            {{ recommendation.content|safe }}
+        </div>
+
+        <div class="recommendation-answers">
+            <h3>Your answer:</h3>
+            <ul>
+                {% for answer in recommendation.answers.all %}
+                    <li>{{ answer.text }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}

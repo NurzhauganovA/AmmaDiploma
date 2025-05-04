@@ -1,0 +1,91 @@
+.title_main_container_block {
+    margin-bottom: 50px;
+    text-align: center;
+}
+
+.title_main_container_block h1 {
+    font-size: 40px;
+    font-weight: 600;
+}
+
+.photo_main_content_block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.img_block_photo_main img {
+    width: 650px;
+    height: 470px;
+}
+
+.word_block_photo_main {
+    background-color: #DFFFF6;
+    width: 450px;
+    height: 370px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 50px 100px;
+    text-align: center;
+    gap: 30px;
+}
+
+.word_block_photo_main p {
+    font-weight: 600;
+    font-size: 16px;
+    color: #555;
+    line-height: 1.6;
+}
+
+.title_block {
+    margin: 50px 0 100px 0;
+}
+
+.title_block h1 {
+    font-size: 40px;
+    font-weight: 700;
+}
+
+.main_content_week_by_week_block h2 {
+    margin: 30px 0;
+    font-size: 35px;
+    font-weight: 600;
+}
+
+.main_content_week_by_week_block h1 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 20px 0;
+    text-decoration: underline;
+}
+
+.main_content_week_by_week_block p {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.6;
+}
+
+.img_baby_development {
+    margin: 30px 0;
+    width: 500px;
+    height: 500px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.prev_all_weeks {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.prev_all_weeks h1 {
+    color: #000;
+    font-size: 24px;
+    font-weight: 600;
+    margin-left: 10px;
+    text-decoration: underline;
+}

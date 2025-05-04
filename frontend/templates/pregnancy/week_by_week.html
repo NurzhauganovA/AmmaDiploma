@@ -1,0 +1,96 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block links %}
+    <link rel="stylesheet" href="{% static 'pregnancy/css/week_by_week.css' %}">
+{% endblock %}
+
+{% block title %} Amma - Pregnancy week by week {% endblock %}
+
+{% block page_title %} Pregnancy week by week {% endblock %}
+
+{% block content %}
+    <div class="main_container_block">
+        <div class="title_main_container_block">
+            <h1>Pregnancy Week by Week</h1>
+        </div>
+        <div class="photo_main_content_block">
+            <div class="img_block_photo_main">
+                <img src="https://assets.babycenter.com/ims/2025/03/40-body-E-deeptan_4x3.jpg?height=449px" alt="">
+            </div>
+            <div class="word_block_photo_main">
+                <p>Looking for a week-by-week guide to pregnancy? You're in luck! We've got loads of expert-approved info about each week and trimester, including what's up with your growing baby and what changes to expect for yourself.</p>
+                <p>You'll find stunning fetal development videos, thousands of articles, and helpful tools like our Due Date Calculator and Baby Names Finder. Meet other parents-to-be in our online community, and get all of this and more in our free pregnancy app. Dive in, and congratulations!</p>
+            </div>
+        </div>
+
+        <div class="main_pregnancy_container">
+            <div class="trimester_pregnancy_container">
+                <div class="title_trimester_pregnancy_container">
+                    <h1>First Trimester of Pregnancy</h1>
+                </div>
+                <div class="main_content_trimester_block">
+                    {% for first_trimester in first_trimester_pregnancy %}
+                        <a href="{% url 'week_by_week_detail' first_trimester.week_number %}" class="trimester_cart_block">
+                            <div class="img_block_trimester_cart"
+                                 style="background-image: url('{{ first_trimester.image.url }}')"
+                            >
+                            </div>
+                            <div class="word_block_trimester_cart">
+                                <h1>{{ first_trimester.title }}</h1>
+                                <p>{{ first_trimester.description }}</p>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="trimester_pregnancy_container">
+                <div class="title_trimester_pregnancy_container">
+                    <h1>Second Trimester of Pregnancy</h1>
+                </div>
+                <div class="main_content_trimester_block">
+                    {% for second_trimester in second_trimester_pregnancy %}
+                        <a href="{% url 'week_by_week_detail' second_trimester.week_number %}" class="trimester_cart_block">
+                            <div class="img_block_trimester_cart"
+                                 style="background-image: url('{{ second_trimester.image.url }}')"
+                            >
+                            </div>
+                            <div class="word_block_trimester_cart">
+                                <h1>{{ second_trimester.title }}</h1>
+                                <p>{{ second_trimester.description }}</p>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="trimester_pregnancy_container">
+                <div class="title_trimester_pregnancy_container">
+                    <h1>Third Trimester of Pregnancy</h1>
+                </div>
+                <div class="main_content_trimester_block">
+                    {% for third_trimester in third_trimester_pregnancy %}
+                        <a href="{% url 'week_by_week_detail' third_trimester.week_number %}" class="trimester_cart_block">
+                            <div class="img_block_trimester_cart"
+                                 style="background-image: url('{{ third_trimester.image.url }}')"
+                            >
+                            </div>
+                            <div class="word_block_trimester_cart">
+                                <h1>{{ third_trimester.title }}</h1>
+                                <p>{{ third_trimester.description }}</p>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}

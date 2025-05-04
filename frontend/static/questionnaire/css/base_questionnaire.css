@@ -1,0 +1,339 @@
+@font-face {
+    font-family: 'Gilroy';
+    src: url('../fonts/Gilroy-Light.otf') format('opentype'),
+         url('../fonts/Gilroy-ExtraBold.otf') format('opentype');
+}
+
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+a {
+    color: #4B0082;
+    text-decoration: none;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+ol, ul {
+  list-style: none;
+}
+blockquote, q {
+  quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+body {
+    font-family: Montserrat, sans-serif;
+    font-weight: 300;
+}
+
+
+/* GET STARTED */
+
+
+.main_content_container {
+    height: calc(100vh - 100px);
+    display: flex;
+    justify-content: center;
+    background-color: #FFF;
+    padding: 50px 600px;
+    overflow: hidden;
+}
+
+.questionnaire_center_main_content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.logo_container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    justify-content: space-between;
+}
+
+.logo_container i {
+    cursor: pointer;
+}
+
+.logo_container img {
+    width: 50px;
+}
+
+.logo_container p {
+    color: #FFF;
+}
+
+.main_questionnaire_block {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.questionnaire_round_block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.questionnaire_round {
+    width: 50px;
+    height: 7px;
+    border-radius: 3px;
+    background-color: #E9E9E9FF;
+}
+
+.questionnaire_round.active {
+    background-color: #ff8898;
+}
+
+.questionnaire_body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+    gap: 20px;
+}
+
+.questionnaire_content {
+    display: none;
+}
+
+.questionnaire_content.active {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.questionnaire_title {
+    font-size: 36px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.questionnaire_answer_block {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 50px;
+}
+
+.questionnaire_answer {
+    width: 400px;
+    height: 80px;
+    background-color: #E9E9E9FF;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.questionnaire_answer:hover {
+    background-color: #ff8898;
+}
+
+.questionnaire_answer:hover p {
+    color: #FFF;
+}
+
+.questionnaire_answer p {
+    font-size: 20px;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+}
+
+
+.finished_questionnaire_block {
+    display: none;
+}
+
+.finished_questionnaire_block.active {
+    display: flex;
+    justify-content: center;
+}
+
+.check_plan_for_pregnancy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.main_title_check_plan h1 {
+    text-align: center;
+    font-size: 30px;
+    font-weight: 500;
+}
+
+.sprinter_block_check_plan {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 50px;
+}
+
+
+.progress-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.progress-circle {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    z-index: 2;
+}
+
+.progress-ring__circle {
+    transition: stroke-dashoffset 0.35s;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+    border-radius: 10px;
+}
+
+.progress_background_circle {
+    width: 170px;
+    height: 170px;
+    position: absolute;
+    margin-top: 50px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ff8898;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.progress-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: transparent;
+    padding: 15px;
+}
+
+.progress-text {
+    margin-top: 40px;
+    text-align: center;
+}
+
+.percent {
+    font-size: 36px;
+    font-weight: 600;
+}
+
+.status {
+    font-size: 24px;
+    font-weight: 400;
+    color: #000;
+    margin-top: 20px;
+}
+
+.send_email_block {
+    display: none;
+}
+
+.send_email_block.active {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    margin-top: 50px;
+}
+
+.main_icon_block img {
+    width: 200px;
+}
+
+.title_block_send_email {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+    margin-top: 50px;
+}
+
+.title_block_send_email h1 {
+    font-size: 32px;
+    font-weight: 600;
+}
+
+.title_block_send_email p {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.send_email_block input {
+    width: 360px;
+    height: 60px;
+    border-radius: 10px;
+    padding: 0 20px;
+    font-size: 20px;
+    font-weight: 500;
+    margin: 50px 0 100px 0;
+    border: 1px solid #E9E9E9FF;
+    outline: none;
+}
+
+.send_email_block input:focus {
+    border: 1px solid #ff8898;
+}
+
+.send_email_block input::placeholder {
+    font-size: 20px;
+    font-weight: 500;
+    color: #000;
+}
+
+.send_email_block button {
+    width: 400px;
+    height: 60px;
+    background-color: #ff8898;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 500;
+    color: #FFF;
+    transition: all 0.2s ease-in-out;
+    border: none;
+}

@@ -1,0 +1,129 @@
+.main_maket_block_section_container {
+	width: 100%;
+	height: 700px;
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+}
+
+.title_main_maket_block {
+	padding-top: 230px;
+	font-family: 'Saira Condensed', sans-serif;
+	font-style: normal;
+	font-weight: 700;
+	text-transform: uppercase;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	text-align: right;
+}
+
+.title_main_maket_block h1 {
+	color: #FFF;
+	font-size: 64px;
+}
+
+.title_main_maket_block p {
+	color: #FFF;
+	font-size: 64px;
+	line-height: 86px;
+	display: flex;
+	justify-content: flex-start;
+	align-items: flex-start;
+	text-align: left;
+}
+
+.successfully_test_completed_block {
+	position: fixed;
+	top: 140px;
+	right: 85px;
+	width: 300px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 20px;
+	background-color: #FFF;
+	box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.successfully_test_completed_block h1 {
+	font-family: 'Saira Condensed', sans-serif;
+	font-style: normal;
+	font-weight: 700;
+	font-size: 18px;
+	line-height: 31px;
+	text-align: center;
+	text-transform: uppercase;
+}
+
+.successfully_test_completed_block span {
+	cursor: pointer;
+	margin-top: 20px;
+	background-color: #A46A90;
+	padding: 10px 40px;
+
+	color: #FFF;
+	font-family: 'Saira Condensed', sans-serif;
+	font-style: normal;
+	font-weight: 700;
+	font-size: 18px;
+	text-transform: uppercase;
+}
+
+.main_tests_data_container {
+	margin: 50px 0 80px 0;
+	display: flex;
+	gap: 10px;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	justify-content: center;
+}
+
+.main_test_data_block {
+	align-self:auto;
+	flex: 0 1 32%;
+	margin-top: 75px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.image_block_test_data {
+	width: 100%;
+	height: 200px;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.title_block_test_data {
+	flex-grow:1;
+	margin-top: 13px;
+}
+
+.title_block_test_data h1 {
+	font-family: 'Saira Condensed', sans-serif;
+	font-style: normal;
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 31px;
+	text-align: center;
+	text-transform: uppercase;
+}
+
+.pass_block_test_data {
+	margin-top: 25px;
+	align-self:center;
+	cursor: pointer;
+	padding: 3px 16px;
+	background-color: #A46A90;
+	box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+
+	color: #FFF;
+	font-family: 'Saira Condensed', sans-serif;
+	font-style: normal;
+	font-weight: 600;
+	font-size: 20px;
+	line-height: 31px;
+	text-transform: uppercase;
+}

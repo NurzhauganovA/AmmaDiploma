@@ -1,0 +1,292 @@
+:root {
+    --primary-color: #9f86c0; /* Лавандовый */
+    --secondary-color: #a5cad2; /* Нежно-голубой */
+    --accent-color: #f4b5cd; /* Нежно-розовый */
+    --accent-dark: #e792b1; /* Темно-розовый для кнопок */
+    --text-color: #333;
+    --text-light: #666;
+    --background-color: #fafafe;
+    --white: #fff;
+    --shadow: 0 4px 10px rgba(0, 0, 0, 0.07);
+    --border-radius: 12px;
+    --transition: all 0.3s ease;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.page-title {
+    text-align: center;
+    padding: 3rem 0 2rem;
+}
+
+.page-title h2 {
+    font-family: 'Lora', serif;
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.page-title p {
+    max-width: 700px;
+    margin: 0 auto;
+    color: var(--text-light);
+    font-size: 1.1rem;
+}
+
+.search-box {
+    display: flex;
+    max-width: 700px;
+    margin: 0 auto 2rem;
+    position: relative;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    box-shadow: var(--shadow);
+}
+
+.search-box button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--primary-color);
+}
+
+.vitamins-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-bottom: 4rem;
+}
+
+.vitamin-card {
+    background-color: var(--white);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.vitamins-grid .vitamin-card {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInUp 0.5s forwards;
+}
+
+.vitamins-grid .vitamin-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.vitamins-grid .vitamin-card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.vitamins-grid .vitamin-card:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.vitamins-grid .vitamin-card:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.vitamins-grid .vitamin-card:nth-child(5) {
+    animation-delay: 0.5s;
+}
+
+.vitamins-grid .vitamin-card:nth-child(6) {
+    animation-delay: 0.6s;
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.vitamin-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.12);
+}
+
+.vitamin-image {
+    height: 400px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+.vitamin-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.5));
+}
+
+.vitamin-content {
+    padding: 1.5rem;
+}
+
+.vitamin-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.vitamin-title h3 {
+    font-family: 'Lora', serif;
+    font-size: 1.4rem;
+    color: var(--primary-color);
+}
+
+.vitamin-dose {
+    background-color: var(--accent-dark);
+    color: var(--white);
+    padding: 0.4rem 1rem;
+    font-size: 0.85rem;
+}
+
+.vitamin-description {
+    color: var(--text-light);
+    margin-bottom: 1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.vitamin-sources {
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
+.vitamin-sources span {
+    font-weight: 500;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 3rem;
+}
+
+.pagination button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background-color: var(--white);
+    color: var(--text-color);
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: var(--shadow);
+}
+
+.pagination button.active {
+    background-color: var(--accent-dark);
+    color: var(--white);
+}
+
+.pagination button:hover:not(.active) {
+    background-color: var(--accent-color);
+}
+
+.filter-section {
+    background-color: var(--white);
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow);
+}
+
+.filter-title {
+    font-family: 'Lora', serif;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+.filter-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+}
+
+.filter-tag {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.filter-tag:hover, .filter-tag.active {
+    background-color: var(--accent-color);
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Scroll to top button */
+.scroll-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background-color: var(--accent-dark);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: var(--transition);
+    opacity: 0;
+    visibility: hidden;
+    box-shadow: var(--shadow);
+}
+
+.scroll-top.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.scroll-top:hover {
+    background-color: var(--primary-color);
+}
+

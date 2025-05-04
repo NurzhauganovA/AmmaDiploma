@@ -1,0 +1,46 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block links %}
+    <link rel="stylesheet" href="{% static 'pregnancy/css/pregnancy.css' %}">
+{% endblock %}
+
+{% block title %} Amma - Pregnancy {% endblock %}
+
+{% block page_title %} Pregnancy {% endblock %}
+
+{% block content %}
+    <div class="main_content_block">
+        <div class="photo_main_content_block">
+            <div class="img_block_photo_main">
+                <img src="https://assets.babycenter.com/ims/2020/03/Feb-18-47_4x3.jpg?height=383px" alt="">
+            </div>
+            <div class="word_block_photo_main">
+                <h1>Pregnancy</h1>
+                <p>Welcome to pregnancy! This is the start of an incredible journey. To help you along, we offer info on pregnancy aches and pains, weight gain and nutrition, what's safe during pregnancy and what's not, pregnancy stages, labor and delivery, and more — plus how to sift through all those baby names to find the perfect one.</p>
+                <div class="background_image" style="background-image: url('https://assets.babycenter.com/ims/2024/01/img_phase_cornerWaves_rejuv.svg')"></div>
+            </div>
+        </div>
+        <div class="tools_section">
+            <h2>Pregnancy tools</h2>
+            <div class="tools_container">
+                <a href="{% url 'due_date_calculator' %}" class="tool">
+                    <img src="https://assets.babycenter.com/ims/2023/11/DueDateCalculator-nov-2023.svg" alt="Due Date Calculator" />
+                    <p>Due Date Calculator</p>
+                </a>
+                <a href="{% url 'week_by_week' %}" class="tool">
+                    <img src="https://assets.babycenter.com/ims/2023/11/BabyNames-nov-2023.svg" />
+                    <p>Week by week</p>
+                </a>
+                <a href="{% url 'weight_gain_calculator' %}" class="tool">
+                    <img src="https://assets.babycenter.com/ims/2023/11/PregWeightGainCalc-nov-2023.svg" alt="Pregnancy Weight Gain Calculator" />
+                    <p>Pregnancy Weight Gain Calculator</p>
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}

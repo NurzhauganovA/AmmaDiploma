@@ -1,0 +1,106 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block links %}
+    <link rel="stylesheet" href="{% static 'tests/css/quiz.css' %}">
+{% endblock %}
+
+{% block title %} Amma - Home {% endblock %}
+
+{% block page_title %} Home {% endblock %}
+
+{% block content %}
+    
+    <section>
+        <div class="section_container">
+            <div class="main_test_quiz_container">
+                <div class="title_main_test_quiz_block">
+                    <h1>Test: {{ test.title }}</h1>
+                </div>
+                <div class="question_main_test_quiz_block">
+                    <form method="POST">
+                        {% csrf_token %}
+                        {% for question in questions %}
+                            <div id="question{{ question.id }}" {% if not forloop.first %}style="display:none"{% endif %}>
+                                <div class="number_statement_question_block">
+                                    <div class="number_of_question_circle_block">
+                                        <p id="current_question_number">{{ forloop.counter }}</p>
+                                    </div>
+                                    <div class="background_range_question_block">
+                                        <div class="range_question_value_block" style="width: calc(({{ forloop.counter }} / {{ questions|length }}) * 100%);"></div>
+                                    </div>
+                                    <div class="completed_number_of_question_block">
+                                        <span><p id="current_question_id">{{ forloop.counter }}</p>/{{ questions|length }}</span>
+                                    </div>
+                                </div>
+                                <div class="title_question_block">
+                                    <h1>{{ question.text }}</h1>
+                                </div>
+                                {% for option in question.quizoption_set.all %}
+                                    <div class="options_question_block">
+                                        <input type="radio" id="option{{ option.id }}" name="question{{ question.id }}" value="{{ option.id }}" required>
+                                        <label for="option{{ option.id }}">{{ option.text }}</label>
+                                    </div>
+                                {% endfor %}
+                                {% if not forloop.last %}
+                                    <div class="next_prev_question_block">
+                                        <button type="button" class="next_question_block" onclick="nextQuestion({{ question.id }})">Next</button>
+                                    </div>
+                                {% else %}
+                                    <div class="next_prev_question_block">
+                                        <button type="submit" class="next_question_block">Finish</button>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block scripts %}
+    
+    <script>
+
+        function nextQuestion(currentQuestionId) {
+
+            let options = document.getElementsByName("question" + currentQuestionId);
+            let selectedOption = null;
+            for (let i = 0; i < options.length; i++) {
+                if (options[i].checked) {
+                    selectedOption = options[i].value;
+                    break;
+                }
+            }
+            if (!selectedOption) {
+                alert("Please select an option.");
+                return;
+            }
+
+            const listQuestions = [
+                {% for q in questions %}
+                    {
+                        questionId: 'question{{ q.id }}'
+                    },
+                {% endfor %}
+            ]
+
+            for (let i = 0; i < listQuestions.length; i++) {
+                if (listQuestions[i].questionId === `question${currentQuestionId}`) {
+                    document.getElementById(listQuestions[i].questionId).style.display = 'none';
+                    if (i < listQuestions.length - 1) {
+                        document.getElementById(listQuestions[i + 1].questionId).style.display = 'block';
+                    } else {
+                        document.querySelector('form').submit();
+                    }
+                    break;
+                }
+            }
+        }
+
+    </script>
+
+{% endblock %}

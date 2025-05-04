@@ -1,0 +1,832 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Amma - Nutrition for pregnancy mothers{% endblock %}
+
+{% block links %}
+    <link rel="stylesheet" href="{% static 'nutrition/css/nutrition-detail.css' %}">
+    <link rel="stylesheet" href="{% static 'nutrition/css/nutrition-modal.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div class="detail-container">
+    <!-- Hero Section -->
+    <section class="detail-hero">
+        <div class="hero-image">
+            <img src="{{ content.image.url }}" alt="{{ content.title }}">
+            <div class="hero-overlay" style="background-color: {{ content.color_code }}80"></div>
+        </div>
+
+        <div class="hero-content">
+            <div class="content-badges">
+                <span class="badge content-type" style="background-color: {{ content.color_code }}">
+                    {{ content.content_type.name }}
+                </span>
+
+                {% if content.trimester != 'all' %}
+                <span class="badge trimester">
+                    {{ content.get_trimester_display }}
+                </span>
+                {% endif %}
+            </div>
+
+            <h1 class="content-title">{{ content.title }}</h1>
+
+            <div class="hero-benefits">
+                {% for benefit in content.benefits.all %}
+                <span class="benefit-pill">{{ benefit.name }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Info Bar -->
+    <section class="info-bar">
+        {% if content.content_type.name == 'Recipe' %}
+        <div class="info-item">
+            <i class="fas fa-clock"></i>
+            <div class="info-text">
+                <span class="info-label">Prep Time</span>
+                <span class="info-value">{{ content.prep_time }} min</span>
+            </div>
+        </div>
+        <div class="info-item">
+            <i class="fas fa-fire"></i>
+            <div class="info-text">
+                <span class="info-label">Cook Time</span>
+                <span class="info-value">{{ content.cook_time }} min</span>
+            </div>
+        </div>
+        <div class="info-item">
+            <i class="fas fa-chart-simple"></i>
+            <div class="info-text">
+                <span class="info-label">Difficulty</span>
+                <span class="info-value">{{ content.get_difficulty_display }}</span>
+            </div>
+        </div>
+        <div class="info-item">
+            <i class="fas fa-utensils"></i>
+            <div class="info-text">
+                <span class="info-label">Servings</span>
+                <span class="info-value">2</span>
+            </div>
+        </div>
+        {% elif content.content_type.name == 'Meal Plan' %}
+        <div class="info-item">
+            <i class="fas fa-calendar-days"></i>
+            <div class="info-text">
+                <span class="info-label">Duration</span>
+                <span class="info-value">{{ content.days }} days</span>
+            </div>
+        </div>
+        <div class="info-item">
+            <i class="fas fa-bullseye"></i>
+            <div class="info-text">
+                <span class="info-label">Focus</span>
+                <span class="info-value">{{ content.focus }}</span>
+            </div>
+        </div>
+        {% else %}
+        <div class="info-item">
+            <i class="fas fa-book-open"></i>
+            <div class="info-text">
+                <span class="info-label">Read Time</span>
+                <span class="info-value">{{ content.read_time }} min</span>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Save & Share Buttons -->
+        <div class="action-buttons">
+            <button class="action-btn bookmark-btn" title="Save for later">
+                <i class="far fa-bookmark"></i>
+            </button>
+            <button class="action-btn share-btn" title="Share">
+                <i class="far fa-share-square"></i>
+            </button>
+        </div>
+    </section>
+
+    <!-- Main Content Section -->
+    <section class="main-content">
+        <!-- Content Tab Navigation -->
+        <div class="tab-navigation">
+            <button class="tab-button active" data-target="about">About</button>
+
+            {% if content.content_type.name == 'Recipe' %}
+            <button class="tab-button" data-target="ingredients">Ingredients</button>
+            <button class="tab-button" data-target="instructions">Instructions</button>
+            <button class="tab-button" data-target="nutrition">Nutrition</button>
+            {% elif content.content_type.name == 'Meal Plan' %}
+            <button class="tab-button" data-target="schedule">Schedule</button>
+            <button class="tab-button" data-target="shopping">Shopping List</button>
+            {% elif content.content_type.name == 'Nutrition Facts' %}
+            <button class="tab-button" data-target="details">Details</button>
+            <button class="tab-button" data-target="sources">Food Sources</button>
+            {% elif content.content_type.name == 'Supplements' %}
+            <button class="tab-button" data-target="details">Details</button>
+            <button class="tab-button" data-target="dosage">Dosage</button>
+            {% endif %}
+
+            <button class="tab-button" data-target="related">Related</button>
+        </div>
+
+        <div class="tab-content-wrapper">
+            <!-- About Section -->
+            <div class="tab-content active" id="about">
+                <div class="section-title">
+                    <h2>About</h2>
+                    <div class="title-decoration"></div>
+                </div>
+
+                <div class="about-content">
+                    <div class="description">
+                        {{ content.description|linebreaks }}
+                    </div>
+                </div>
+            </div>
+
+            {% if content.content_type.name == 'Recipe' %}
+            <!-- Ingredients Section -->
+            <div class="tab-content" id="ingredients">
+                <div class="section-title">
+                    <h2>Ingredients</h2>
+                    <div class="title-decoration"></div>
+                </div>
+
+                <div class="ingredients-section">
+                    <div class="servings-control">
+                        <span class="servings-label">Servings:</span>
+                        <div class="servings-buttons">
+                            <button class="serving-adjust" data-action="decrease">−</button>
+                            <span class="serving-count">2</span>
+                            <button class="serving-adjust" data-action="increase">+</button>
+                        </div>
+                    </div>
+
+                    <ul class="ingredients-list">
+                        <li class="ingredient-item">
+                            <div class="ingredient-check">
+                                <input type="checkbox" id="ing-1">
+                                <label for="ing-1"></label>
+                            </div>
+                            <div class="ingredient-text">
+                                <span class="ingredient-amount">2 cups</span>
+                                <span class="ingredient-name">fresh spinach, washed and dried</span>
+                            </div>
+                        </li>
+                        <li class="ingredient-item">
+                            <div class="ingredient-check">
+                                <input type="checkbox" id="ing-2">
+                                <label for="ing-2"></label>
+                            </div>
+                            <div class="ingredient-text">
+                                <span class="ingredient-amount">2</span>
+                                <span class="ingredient-name">large eggs</span>
+                            </div>
+                        </li>
+                        <li class="ingredient-item">
+                            <div class="ingredient-check">
+                                <input type="checkbox" id="ing-3">
+                                <label for="ing-3"></label>
+                            </div>
+                            <div class="ingredient-text">
+                                <span class="ingredient-amount">1/4 cup</span>
+                                <span class="ingredient-name">crumbled feta cheese</span>
+                            </div>
+                        </li>
+                        <li class="ingredient-item">
+                            <div class="ingredient-check">
+                                <input type="checkbox" id="ing-4">
+                                <label for="ing-4"></label>
+                            </div>
+                            <div class="ingredient-text">
+                                <span class="ingredient-amount">1</span>
+                                <span class="ingredient-name">whole wheat tortilla</span>
+                            </div>
+                        </li>
+                        <li class="ingredient-item">
+                            <div class="ingredient-check">
+                                <input type="checkbox" id="ing-5">
+                                <label for="ing-5"></label>
+                            </div>
+                            <div class="ingredient-text">
+                                <span class="ingredient-amount">1 tbsp</span>
+                                <span class="ingredient-name">olive oil</span>
+                            </div>
+                        </li>
+                        <li class="ingredient-item">
+                            <div class="ingredient-check">
+                                <input type="checkbox" id="ing-6">
+                                <label for="ing-6"></label>
+                            </div>
+                            <div class="ingredient-text">
+                                <span class="ingredient-amount">to taste</span>
+                                <span class="ingredient-name">salt and pepper</span>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <div class="save-shopping-list">
+                        <button class="secondary-btn shopping-list-btn">
+                            <i class="fas fa-shopping-basket"></i>
+                            Save as Shopping List
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Instructions Section -->
+            <div class="tab-content" id="instructions">
+                <div class="section-title">
+                    <h2>Instructions</h2>
+                    <div class="title-decoration"></div>
+                </div>
+
+                <div class="instructions-section">
+                    <ol class="instructions-list">
+                        {% if content.recipe_steps %}
+                            {% for step in content.recipe_steps.split %}
+                                {% if step|length > 0 %}
+                                <li class="instruction-item">
+                                    <div class="step-number">{{ forloop.counter }}</div>
+                                    <div class="step-content">{{ step }}</div>
+                                </li>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <li class="instruction-item">
+                                <div class="step-number">1</div>
+                                <div class="step-content">Heat olive oil in a non-stick pan over medium heat.</div>
+                            </li>
+                            <li class="instruction-item">
+                                <div class="step-number">2</div>
+                                <div class="step-content">Add spinach and cook until wilted, about 2 minutes.</div>
+                            </li>
+                            <li class="instruction-item">
+                                <div class="step-number">3</div>
+                                <div class="step-content">Whisk eggs in a bowl, then pour over the spinach.</div>
+                            </li>
+                            <li class="instruction-item">
+                                <div class="step-number">4</div>
+                                <div class="step-content">Cook until eggs are set, about 3 minutes.</div>
+                            </li>
+                            <li class="instruction-item">
+                                <div class="step-number">5</div>
+                                <div class="step-content">Sprinkle with feta cheese and let melt slightly.</div>
+                            </li>
+                            <li class="instruction-item">
+                                <div class="step-number">6</div>
+                                <div class="step-content">Transfer to a warm tortilla, fold, and serve.</div>
+                            </li>
+                        {% endif %}
+                    </ol>
+
+                    <div class="cooking-timer">
+                        <div class="timer-display">
+                            <div class="timer-icon">
+                                <i class="fas fa-hourglass-half"></i>
+                            </div>
+                            <div class="timer-time">00:00</div>
+                        </div>
+                        <div class="timer-buttons">
+                            <button class="timer-start">Start Timer</button>
+                            <button class="timer-reset">Reset</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nutrition Section -->
+            <div class="tab-content" id="nutrition">
+                <div class="section-title">
+                    <h2>Nutrition Facts</h2>
+                    <div class="title-decoration"></div>
+                </div>
+
+                <div class="nutrition-section">
+                    <div class="nutrition-header">
+                        <div class="serving-info">
+                            <div class="serving-title">Serving Size</div>
+                            <div class="serving-value">1 serving</div>
+                        </div>
+                        <div class="calories-info">
+                            <div class="calories-title">Calories</div>
+                            <div class="calories-value">320</div>
+                        </div>
+                    </div>
+
+                    <div class="nutrition-facts">
+                        <div class="nutrient-group">
+                            <h3 class="nutrient-group-title">Macronutrients</h3>
+                            <div class="nutrient-item">
+                                <div class="nutrient-name">Protein</div>
+                                <div class="nutrient-bar">
+                                    <div class="nutrient-progress" style="width: 45%"></div>
+                                </div>
+                                <div class="nutrient-value">18g</div>
+                            </div>
+                            <div class="nutrient-item">
+                                <div class="nutrient-name">Fat</div>
+                                <div class="nutrient-bar">
+                                    <div class="nutrient-progress" style="width: 56%"></div>
+                                </div>
+                                <div class="nutrient-value">16g</div>
+                            </div>
+                            <div class="nutrient-item">
+                                <div class="nutrient-name">Carbohydrates</div>
+                                <div class="nutrient-bar">
+                                    <div class="nutrient-progress" style="width: 37%"></div>
+                                </div>
+                                <div class="nutrient-value">28g</div>
+                            </div>
+                            <div class="nutrient-item">
+                                <div class="nutrient-name">Fiber</div>
+                                <div class="nutrient-bar">
+                                    <div class="nutrient-progress" style="width: 16%"></div>
+                                </div>
+                                <div class="nutrient-value">4g</div>
+                            </div>
+                        </div>
+
+                        <div class="nutrient-group">
+                            <h3 class="nutrient-group-title">Minerals</h3>
+                            <div class="nutrient-item">
+                                <div class="nutrient-name">Iron</div>
+                                <div class="nutrient-bar">
+                                    <div class="nutrient-progress" style="width: 19%"></div>
+                                </div>
+                                <div class="nutrient-value">3.5mg (19% DV)</div>
+                            </div>
+                            <div class="nutrient-item">
+                                <div class="nutrient-name">Calcium</div>
+                                <div class="nutrient-bar">
+                                    <div class="nutrient-progress" style="width: 16%"></div>
+                                </div>
+                                <div class="nutrient-value">210mg (16% DV)</div>
+                            </div>
+                        </div>
+
+                        <div class="nutrient-group">
+                            <h3 class="nutrient-group-title">Vitamins</h3>
+                            <div class="nutrient-item">
+                                <div class="nutrient-name">Folate</div>
+                                <div class="nutrient-bar">
+                                    <div class="nutrient-progress" style="width: 35%"></div>
+                                </div>
+                                <div class="nutrient-value">140mcg (35% DV)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% elif content.content_type.name == 'Meal Plan' %}
+            <!-- Schedule Section -->
+            <div class="tab-content" id="schedule">
+                <div class="section-title">
+                    <h2>Meal Schedule</h2>
+                    <div class="title-decoration"></div>
+                </div>
+
+                <div class="meal-plan-schedule">
+                    <div class="day-selector">
+                        <button class="day-button active">Day 1</button>
+                        <button class="day-button">Day 2</button>
+                        <button class="day-button">Day 3</button>
+                        <button class="day-button">Day 4</button>
+                        <button class="day-button">Day 5</button>
+                        <button class="day-button">Day 6</button>
+                        <button class="day-button">Day 7</button>
+                    </div>
+
+                    <div class="day-content active" id="day-1">
+                        <div class="meal-time">
+                            <div class="meal-icon breakfast">
+                                <i class="fas fa-mug-hot"></i>
+                            </div>
+                            <div class="meal-details">
+                                <h3 class="meal-title">Breakfast</h3>
+                                <p class="meal-description">Ginger lemon tea with plain crackers</p>
+                            </div>
+                        </div>
+
+                        <div class="meal-time">
+                            <div class="meal-icon snack">
+                                <i class="fas fa-apple-alt"></i>
+                            </div>
+                            <div class="meal-details">
+                                <h3 class="meal-title">Morning Snack</h3>
+                                <p class="meal-description">Small handful of almonds and a banana</p>
+                            </div>
+                        </div>
+
+                        <div class="meal-time">
+                            <div class="meal-icon lunch">
+                                <i class="fas fa-utensils"></i>
+                            </div>
+                            <div class="meal-details">
+                                <h3 class="meal-title">Lunch</h3>
+                                <p class="meal-description">Chicken and rice soup with crackers</p>
+                            </div>
+                        </div>
+
+                        <div class="meal-time">
+                            <div class="meal-icon snack">
+                                <i class="fas fa-apple-alt"></i>
+                            </div>
+                            <div class="meal-details">
+                                <h3 class="meal-title">Afternoon Snack</h3>
+                                <p class="meal-description">Apple slices with a small amount of nut butter</p>
+                            </div>
+                        </div>
+
+                        <div class="meal-time">
+                            <div class="meal-icon dinner">
+                                <i class="fas fa-drumstick-bite"></i>
+                            </div>
+                            <div class="meal-details">
+                                <h3 class="meal-title">Dinner</h3>
+                                <p class="meal-description">Baked potato with steamed vegetables and a small portion of grilled chicken</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional day content would go here -->
+                </div>
+
+                <div class="save-calendar">
+                    <button class="secondary-btn calendar-btn">
+                        <i class="fas fa-calendar-plus"></i>
+                        Save to My Calendar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Shopping List Section -->
+            <div class="tab-content" id="shopping">
+                <div class="section-title">
+                    <h2>Shopping List</h2>
+                    <div class="title-decoration"></div>
+                </div>
+
+                <div class="shopping-section">
+                    <div class="shopping-controls">
+                        <div class="shopping-filters">
+                            <button class="filter-button active" data-filter="all">All Items</button>
+                            <button class="filter-button" data-filter="produce">Produce</button>
+                            <button class="filter-button" data-filter="proteins">Proteins</button>
+                            <button class="filter-button" data-filter="grains">Grains</button>
+                            <button class="filter-button" data-filter="other">Other</button>
+                        </div>
+
+                        <div class="shopping-actions">
+                            <button class="action-button select-all">Select All</button>
+                            <button class="action-button deselect-all">Deselect All</button>
+                        </div>
+                    </div>
+
+                    <div class="shopping-list">
+                        <div class="shopping-category">
+                            <h3 class="category-title">Produce</h3>
+                            <ul class="category-items">
+                                <li class="shopping-item" data-category="produce">
+                                    <input type="checkbox" id="shop-1">
+                                    <label for="shop-1">Spinach (3 cups)</label>
+                                </li>
+                                <li class="shopping-item" data-category="produce">
+                                    <input type="checkbox" id="shop-2">
+                                    <label for="shop-2">Potatoes (5 medium)</label>
+                                </li>
+                                <li class="shopping-item" data-category="produce">
+                                    <input type="checkbox" id="shop-3">
+                                    <label for="shop-3">Apples (7)</label>
+                                </li>
+                                <li class="shopping-item" data-category="produce">
+                                    <input type="checkbox" id="shop-4">
+                                    <label for="shop-4">Bananas (7)</label>
+                                </li>
+                                <li class="shopping-item" data-category="produce">
+                                    <input type="checkbox" id="shop-5">
+                                    <label for="shop-5">Ginger (1 small piece)</label>
+                                </li>
+                                <li class="shopping-item" data-category="produce">
+                                    <input type="checkbox" id="shop-6">
+                                    <label for="shop-6">Lemons (3)</label>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="shopping-category">
+                            <h3 class="category-title">Proteins</h3>
+                            <ul class="category-items">
+                                <li class="shopping-item" data-category="proteins">
+                                    <input type="checkbox" id="shop-7">
+                                    <label for="shop-7">Chicken breast (1 lb)</label>
+                                </li>
+                                <li class="shopping-item" data-category="proteins">
+                                    <input type="checkbox" id="shop-8">
+                                    <label for="shop-8">Eggs (12)</label>
+                                </li>
+                                <li class="shopping-item" data-category="proteins">
+                                    <input type="checkbox" id="shop-9">
+                                    <label for="shop-9">Feta cheese (4 oz)</label>
+                                </li>
+                                <li class="shopping-item" data-category="proteins">
+                                    <input type="checkbox" id="shop-10">
+                                    <label for="shop-10">Almonds (1 cup)</label>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="shopping-category">
+                            <h3 class="category-title">Grains</h3>
+                            <ul class="category-items">
+                                <li class="shopping-item" data-category="grains">
+                                    <input type="checkbox" id="shop-11">
+                                    <label for="shop-11">Whole wheat tortillas (6)</label>
+                                </li>
+                                <li class="shopping-item" data-category="grains">
+                                    <input type="checkbox" id="shop-12">
+                                    <label for="shop-12">Rice (2 cups)</label>
+                                </li>
+                                <li class="shopping-item" data-category="grains">
+                                    <input type="checkbox" id="shop-13">
+                                    <label for="shop-13">Crackers (1 box)</label>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="shopping-category">
+                            <h3 class="category-title">Other</h3>
+                            <ul class="category-items">
+                                <li class="shopping-item" data-category="other">
+                                    <input type="checkbox" id="shop-14">
+                                    <label for="shop-14">Olive oil (1 bottle)</label>
+                                </li>
+                                <li class="shopping-item" data-category="other">
+                                    <input type="checkbox" id="shop-15">
+                                    <label for="shop-15">Nut butter (1 jar)</label>
+                                </li>
+                                <li class="shopping-item" data-category="other">
+                                    <input type="checkbox" id="shop-16">
+                                    <label for="shop-16">Ginger tea (1 box)</label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="save-shopping-list">
+                        <button class="secondary-btn shopping-list-btn">
+                            <i class="fas fa-shopping-basket"></i>
+                            Save as Shopping List
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% elif content.content_type.name == 'Nutrition Facts' or content.content_type.name == 'Supplements' %}
+            <!-- Details Section -->
+            <div class="tab-content" id="details">
+                <div class="section-title">
+                    <h2>Detailed Information</h2>
+                    <div class="title-decoration"></div>
+                </div>
+
+                <div class="nutrition-details">
+                    <div class="info-card">
+                        <div class="info-card-header">
+                            <i class="fas fa-lightbulb"></i>
+                            <h3>Why is this important during pregnancy?</h3>
+                        </div>
+                        <div class="info-card-body">
+                            <p>During pregnancy, your body requires additional nutrients to support both your health
+                                and your baby's development. The specific needs vary by trimester and individual
+                                health factors.</p>
+
+                            <div class="key-facts">
+                                <h4>Key Facts</h4>
+                                <ul>
+                                    <li>Your nutrient needs increase by 10-50% during pregnancy</li>
+                                    <li>Some nutrients are especially critical during specific trimesters</li>
+                                    <li>Both deficiency and excess can potentially cause complications</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="info-card-header">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <h3>Recommended Daily Intake</h3>
+                        </div>
+                        <div class="info-card-body">
+                            <div class="intake-table">
+                                <div class="intake-row header">
+                                    <div class="intake-cell">Trimester</div>
+                                    <div class="intake-cell">Amount</div>
+                                    <div class="intake-cell">% of DV</div>
+                                </div>
+                                <div class="intake-row">
+                                    <div class="intake-cell">First Trimester</div>
+                                    <div class="intake-cell">400-600mg</div>
+                                    <div class="intake-cell">100%</div>
+                                </div>
+                                <div class="intake-row">
+                                    <div class="intake-cell">Second Trimester</div>
+                                    <div class="intake-cell">600-800mg</div>
+                                    <div class="intake-cell">150%</div>
+                                </div>
+                                <div class="intake-row">
+                                    <div class="intake-cell">Third Trimester</div>
+                                    <div class="intake-cell">800-1000mg</div>
+                                    <div class="intake-cell">200%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Food Sources or Dosage Section -->
+            <div class="tab-content" id="{% if content.content_type.name == 'Nutrition Facts' %}sources{% else %}dosage{% endif %}">
+                <div class="section-title">
+                    <h2>{% if content.content_type.name == 'Nutrition Facts' %}Food Sources{% else %}Dosage Information{% endif %}</h2>
+                    <div class="title-decoration"></div>
+                </div>
+
+                {% if content.content_type.name == 'Nutrition Facts' %}
+                <div class="food-sources">
+                    <div class="sources-grid">
+                        <div class="food-source-card">
+                            <div class="source-image">
+                                <img src="{% static 'nutrition/images/placeholder.jpg' %}" alt="Leafy Greens">
+                            </div>
+                            <div class="source-content">
+                                <h3>Leafy Greens</h3>
+                                <p>Spinach, kale, and collard greens are excellent sources of folate, iron, and
+                                    calcium.</p>
+                                <div class="source-nutrition">
+                                    <span class="nutrient-tag">Folate</span>
+                                    <span class="nutrient-tag">Iron</span>
+                                    <span class="nutrient-tag">Calcium</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="food-source-card">
+                            <div class="source-image">
+                                <img src="{% static 'nutrition/images/placeholder.jpg' %}" alt="Legumes">
+                            </div>
+                            <div class="source-content">
+                                <h3>Legumes</h3>
+                                <p>Beans, lentils, and chickpeas provide protein, fiber, iron, and folate.</p>
+                                <div class="source-nutrition">
+                                    <span class="nutrient-tag">Protein</span>
+                                    <span class="nutrient-tag">Fiber</span>
+                                    <span class="nutrient-tag">Iron</span>
+                                    <span class="nutrient-tag">Folate</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="food-source-card">
+                            <div class="source-image">
+                                <img src="{% static 'nutrition/images/placeholder.jpg' %}" alt="Nuts and Seeds">
+                            </div>
+                            <div class="source-content">
+                                <h3>Nuts and Seeds</h3>
+                                <p>Walnuts, chia seeds, and flax seeds contain omega-3 fatty acids and
+                                    protein.</p>
+                                <div class="source-nutrition">
+                                    <span class="nutrient-tag">Omega-3</span>
+                                    <span class="nutrient-tag">Protein</span>
+                                    <span class="nutrient-tag">Fiber</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="dosage-information">
+                    <div class="dosage-section">
+                        <h3>Recommended Dosage</h3>
+                        <div class="dosage-table">
+                            <div class="dosage-row header">
+                                <div class="dosage-cell">Trimester</div>
+                                <div class="dosage-cell">Dosage</div>
+                                <div class="dosage-cell">Frequency</div>
+                            </div>
+                            <div class="dosage-row">
+                                <div class="dosage-cell">First Trimester</div>
+                                <div class="dosage-cell">400mg</div>
+                                <div class="dosage-cell">Once daily</div>
+                            </div>
+                            <div class="dosage-row">
+                                <div class="dosage-cell">Second Trimester</div>
+                                <div class="dosage-cell">600mg</div>
+                                <div class="dosage-cell">Once daily</div>
+                            </div>
+                            <div class="dosage-row">
+                                <div class="dosage-cell">Third Trimester</div>
+                                <div class="dosage-cell">800mg</div>
+                                <div class="dosage-cell">Once daily</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="warning-section">
+                        <div class="warning-card">
+                            <div class="warning-icon">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="warning-content">
+                                <h4>Important Notice</h4>
+                                <p>Always consult with your healthcare provider before starting any new supplement regimen during pregnancy. Dosages may need to be adjusted based on your individual health needs.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            <!-- Related Content Section -->
+            <div class="tab-content" id="related">
+                <div class="section-title">
+                    <h2>You Might Also Like</h2>
+                    <div class="title-decoration"></div>
+                </div>
+
+                <div class="related-content">
+                    <div class="related-grid">
+                        {% for related in related_content %}
+                            <div class="related-card">
+                            <div class="related-image">
+                                <img src="{{ related.image.url }}" alt="Calcium-Rich Smoothie Bowl">
+                                <span class="related-badge" style="background-color: #a8d5aa;">{{ related.content_type.name }}</span>
+                            </div>
+                            <div class="related-content">
+                                <h3>{{ related.title }}</h3>
+                                <div class="related-benefits">
+                                    {% for rel_ben in related.benefits.all %}
+                                        <span class="benefit-pill">{{ rel_ben.name }}</span>
+                                    {% endfor %}
+                                </div>
+                                <a href="{% url 'nutrition_detail' related.id %}" class="view-link">View Recipe <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Helpful Tips Section -->
+    <section class="tips-section" style="margin-top: 50px;">
+        <div class="section-title">
+            <h2>Helpful Tips</h2>
+            <div class="title-decoration"></div>
+        </div>
+
+        <div class="tips-grid">
+            <div class="tip-card">
+                <div class="tip-icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <div class="tip-content">
+                    <h3>For Your Wellbeing</h3>
+                    <p>Remember to eat small, frequent meals throughout the day to help maintain energy levels and reduce nausea during pregnancy.</p>
+                </div>
+            </div>
+
+            <div class="tip-card">
+                <div class="tip-icon">
+                    <i class="fas fa-baby"></i>
+                </div>
+                <div class="tip-content">
+                    <h3>For Baby's Development</h3>
+                    <p>This {% if content.content_type.name == 'Recipe' %}recipe{% elif content.content_type.name == 'Meal Plan' %}meal plan{% else %}nutrient{% endif %} supports healthy fetal development by providing essential nutrients for bone and tissue growth.</p>
+                </div>
+            </div>
+
+            <div class="tip-card">
+                <div class="tip-icon">
+                    <i class="fas fa-utensils"></i>
+                </div>
+                <div class="tip-content">
+                    <h3>Preparation Tip</h3>
+                    <p>{% if content.content_type.name == 'Recipe' %}Prepare ingredients in advance to make cooking easier when you might be feeling tired.{% elif content.content_type.name == 'Meal Plan' %}Batch cooking on weekends can help you follow this plan more easily.{% else %}Try to incorporate this nutrient into your daily meals for consistent benefits.{% endif %}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+    <!-- Toast Notification System -->
+    <div class="toast-container"></div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'nutrition/js/nutrition-detail.js' %}"></script>
+{% endblock %}

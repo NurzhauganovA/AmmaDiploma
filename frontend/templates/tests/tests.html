@@ -1,0 +1,49 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block links %}
+    <link rel="stylesheet" href="{% static 'tests/css/tests.css' %}">
+{% endblock %}
+
+{% block title %} Amma - Home {% endblock %}
+
+{% block page_title %} Home {% endblock %}
+
+{% block content %}
+
+    <section>
+        <div class="section_container">
+
+            <div class="main_maket_block_section_container" style="background-image: url({% static 'tests/img/tests.png' %})">
+                <div class="wrapper">
+                    <div class="title_main_maket_block">
+                        <h1>Here <span style="color: #A46A90;">psychological</span></h1>
+                        <p>tests for you</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wrapper">
+                <div class="main_tests_data_container">
+                    {% for test in tests %}
+                        <div class="main_test_data_block">
+                            <div class="image_block_test_data" style="background-image: url({{ test.image.url }})"></div>
+                            <div class="title_block_test_data">
+                                <h1>{{ test.title }}</h1>
+                            </div>
+                            <a href="{% url 'tests-detail' test.id %}" class="pass_block_test_data">
+                                Pass the test
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}
