@@ -1,0 +1,7 @@
+.venv/
+.idea/
+
+backend/.idea/
+backend/.venv/
+
+docker/dev/envs/

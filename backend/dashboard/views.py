@@ -2,6 +2,8 @@ import json
 import os
 from datetime import timedelta, date
 
+from openai import OpenAI
+
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.core.paginator import PageNotAnInteger, EmptyPage, Paginator
 from django.db import transaction
@@ -10,6 +12,9 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.decorators import method_decorator
+from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET
 
 from blog.models import Blog
@@ -1242,3 +1247,225 @@ def seed_nutrition_content(content_types, benefits):
         content_items.append(tip)
 
     return content_items
+
+
+class ChatBotView(View):
+    """API для обработки сообщений чат-бота"""
+
+    def __init__(self):
+        super().__init__()
+        # Инициализация клиента OpenAI
+        self.client = OpenAI(api_key=settings.OPENAI_API_KEY)
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request):
+        try:
+            # Парсинг JSON данных
+            data = json.loads(request.body)
+            user_message = data.get('message', '').strip()
+            conversation_history = data.get('conversation_history', [])
+
+            if not user_message:
+                return JsonResponse({
+                    'error': 'Сообщение не может быть пустым'
+                }, status=400)
+
+            # Генерация ответа
+            bot_response = self.generate_bot_response(user_message, conversation_history)
+
+            # Определение быстрых ответов
+            quick_replies = self.get_quick_replies(user_message)
+
+            return JsonResponse({
+                'message': bot_response,
+                'quick_replies': quick_replies,
+                'status': 'success'
+            })
+
+        except json.JSONDecodeError:
+            return JsonResponse({
+                'error': 'Неверный формат JSON'
+            }, status=400)
+        except Exception as e:
+            return JsonResponse({
+                'error': 'Внутренняя ошибка сервера'
+            }, status=500)
+
+    def generate_bot_response(self, user_message, conversation_history):
+        """Генерация ответа бота с помощью OpenAI"""
+        try:
+            # Формирование контекста из истории
+            context_messages = []
+
+            # Системное сообщение с инструкциями для бота
+            system_prompt = """
+            Ты - Amma Assistant, виртуальный помощник для беременных женщин. Ты дружелюбный, заботливый и профессиональный помощник, который предоставляет полезную информацию о беременности.
+
+            Твои основные области знаний:
+            - Питание во время беременности (витамины, минералы, рекомендуемые продукты)
+            - Развитие ребенка по неделям и триместрам
+            - Физические упражнения и активность для беременных
+            - Общие вопросы о здоровье и самочувствии
+            - Подготовка к родам и уход за новорожденным
+            - Эмоциональная поддержка
+
+            Важные принципы:
+            - Всегда напоминай, что нужно консультироваться с врачом
+            - Не ставь диагнозы и не назначай лечение
+            - Будь позитивной и поддерживающей
+            - Отвечай на русском языке
+            - Если не знаешь ответ, честно скажи об этом
+            - Структурируй информацию, используй списки и выделения
+
+            Отвечай максимум в 200-300 словов, чтобы информация была полезной, но не слишком длинной.
+            """
+
+            context_messages.append({"role": "system", "content": system_prompt})
+
+            # Добавление последних сообщений для контекста (максимум 6)
+            for msg in conversation_history[-6:]:
+                if msg['type'] == 'user':
+                    context_messages.append({"role": "user", "content": msg['content']})
+                elif msg['type'] == 'bot':
+                    context_messages.append({"role": "assistant", "content": msg['content']})
+
+            # Добавление текущего сообщения пользователя
+            context_messages.append({"role": "user", "content": user_message})
+
+            # Запрос к OpenAI с новым API
+            response = self.client.chat.completions.create(
+                model="gpt-3.5-turbo",  # Исправлено название модели
+                messages=context_messages,
+                temperature=0.7,
+                max_tokens=500,
+                presence_penalty=0.1,
+                frequency_penalty=0.1
+            )
+
+            # Получение ответа
+            bot_response = response.choices[0].message.content.strip()
+            return bot_response
+
+        except Exception as e:
+            print("ERROR:", e)  # Для отладки
+            return self.get_fallback_response(user_message)
+
+    def get_fallback_response(self, user_message):
+        """Резервные ответы если OpenAI недоступен"""
+
+        # Простые ключевые слова для базовых ответов
+        keywords_responses = {
+            'питание': """
+            Во время беременности важно:
+            • Есть разнообразную пищу
+            • Принимать фолиевую кислоту
+            • Употреблять кальций и железо
+            • Пить достаточно воды
+
+            Обязательно проконсультируйтесь с врачом о вашем рационе!
+            """,
+
+            'витамины': """
+            Основные витамины для беременных:
+            • Фолиевая кислота (400-800 мкг)
+            • Железо (27 мг)
+            • Кальций (1000 мг)
+            • Витамин D (600 МЕ)
+            • Омега-3
+
+            Врач подберет подходящий комплекс именно для вас.
+            """,
+
+            'упражнения': """
+            Безопасные упражнения:
+            • Ходьба
+            • Плавание
+            • Йога для беременных
+            • Дыхательные упражнения
+
+            Избегайте контактных видов спорта и обязательно согласуйте с врачом!
+            """,
+
+            'развитие': """
+            Развитие ребенка происходит поэтапно:
+            • 1 триместр: формирование органов
+            • 2 триместр: активный рост
+            • 3 триместр: подготовка к родам
+
+            Каждая неделя важна для здорового развития малыша.
+            """
+        }
+
+        user_message_lower = user_message.lower()
+
+        for keyword, response in keywords_responses.items():
+            if keyword in user_message_lower:
+                return response.strip()
+
+        # Общий ответ если ничего не подошло
+        return """
+        Спасибо за ваш вопрос! Я стараюсь помочь с информацией о беременности, но сейчас испытываю технические трудности.
+
+        Пожалуйста, попробуйте:
+        • Переформулировать вопрос
+        • Задать более конкретный вопрос о питании, витаминах или развитии ребенка
+
+        Помните: всегда консультируйтесь с врачом по важным вопросам!
+        """
+
+    def get_quick_replies(self, user_message):
+        """Определение быстрых ответов на основе сообщения пользователя"""
+
+        user_message_lower = user_message.lower()
+
+        # Быстрые ответы для разных тем
+        if any(word in user_message_lower for word in ['питание', 'еда', 'продукты']):
+            return [
+                'Витамины для беременных',
+                'Что нельзя есть?',
+                'Меню на день',
+                'Фолиевая кислота'
+            ]
+
+        elif any(word in user_message_lower for word in ['витамины', 'добавки']):
+            return [
+                'Железо при беременности',
+                'Кальций и витамин D',
+                'Омега-3 жирные кислоты',
+                'Когда начинать прием?'
+            ]
+
+        elif any(word in user_message_lower for word in ['упражнения', 'спорт', 'физкультура']):
+            return [
+                'Йога для беременных',
+                'Безопасная ходьба',
+                'Упражнения дома',
+                'Что нельзя делать?'
+            ]
+
+        elif any(word in user_message_lower for word in ['развитие', 'ребенок', 'малыш']):
+            return [
+                'Развитие по неделям',
+                'УЗИ и обследования',
+                'Движения ребенка',
+                'Подготовка к родам'
+            ]
+
+        elif any(word in user_message_lower for word in ['самочувствие', 'тошнота', 'недомогание']):
+            return [
+                'Токсикоз в 1 триместре',
+                'Изжога и отеки',
+                'Усталость',
+                'Когда обращаться к врачу?'
+            ]
+
+        # Общие быстрые ответы
+        return [
+            'Питание в 1 триместре',
+            'Витамины и добавки',
+            'Физическая активность',
+            'Развитие ребенка'
+        ]

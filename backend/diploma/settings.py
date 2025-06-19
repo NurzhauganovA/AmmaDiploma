@@ -9,7 +9,7 @@ env = environ.Env()
 BASE_DIR = Path(__file__).resolve().parent.parent
 PARENT_DIR = Path(__file__).resolve().parent.parent.parent
 
-environ.Env.read_env(os.path.join(PARENT_DIR, '.envs/.django'))
+environ.Env.read_env(os.path.join(PARENT_DIR, 'docker/dev/envs/.env'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -169,3 +169,6 @@ CSRF_TRUSTED_ORIGINS = [
     # или короче, чтобы не менять при каждом новом туннеле:
     'https://*.ngrok-free.app',
 ]
+
+
+OPENAI_API_KEY = env('OPENAI_API_KEY')
