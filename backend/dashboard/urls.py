@@ -25,4 +25,6 @@ urlpatterns = [
     path('nutritions/<int:content_id>/', views.nutrition_detail, name='nutrition_detail'),
     path('nutrition_filter/', views.filter_content, name='nutrition_filter'),
     path('nutrition_update_progress/', views.update_nutrient_progress, name='nutrition_update_progress'),
+
+    path('api/chatbot/', views.ChatBotView.as_view(), name='chatbot')
 ]
