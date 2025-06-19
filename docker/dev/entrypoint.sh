@@ -1,7 +1,7 @@
 #!/bin/sh
 
-python manage.py collectstatic --noinput
+python backend/manage.py collectstatic --noinput
 
-python manage.py migrate
+python backend/manage.py migrate
 
-daphne -b 0.0.0.0 -p 8000 diploma.asgi:application
+python backend/manage.py runserver 0.0.0.0:8000
