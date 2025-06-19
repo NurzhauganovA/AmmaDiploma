@@ -385,7 +385,7 @@ class ChatBot {
     }
 
     async sendToServer(message) {
-        const csrfToken = this.getCookie('csrftoken');
+        const csrfToken = '{{ csrf_token }}';
 
         const response = await fetch('/api/chatbot/', {
             method: 'POST',
