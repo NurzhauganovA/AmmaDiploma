@@ -1,5 +1,0 @@
-FROM postgres:latest
-
-COPY . .
-
-COPY ./docker/dev/init.sql /docker-entrypoint-initdb.d/

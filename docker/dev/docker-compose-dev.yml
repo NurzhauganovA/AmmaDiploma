@@ -1,65 +1,22 @@
 version: '3.9'
 
 services:
-    smartschool-web:
+    web:
         build:
             context: ../..
-            dockerfile: docker/dev/Dockerfile-dev
-        container_name: smartschool-web
+            dockerfile: docker/dev/Dockerfile
+        container_name: web
         restart: always
         env_file:
-            - envs/.env_web_dev
+            -   envs/.env
         volumes:
-            - ../../backend:/app
+            - ../..:/app
             - static:/app/static
             - media:/app/media
-            - ../../frontend:/frontend
-            - ../../frontend/static:/app/frontend/static
         ports:
             - "8000:8000"
-        depends_on:
-            smartschool-db:
-                condition: service_healthy
-        command: sh -c "/entrypoint.sh"
-        networks:
-            - smartschool-network
-
-    smartschool-db:
-        build:
-            context: ../..
-            dockerfile: docker/dev/Dockerfile-db-dev
-        image: postgres:16-alpine
-        container_name: smartschool-db
-        restart: always
-        env_file:
-            - envs/.env_db_dev
-        ports:
-            - "7778:5432"
-        healthcheck:
-            test: [ "CMD", "pg_isready", "-q" ]
-        volumes:
-            - smartschool_db_data:/var/lib/postgresql/data
-            - ./init:/docker-entrypoint-initdb.d
-        networks:
-            - smartschool-network
-
-    smartschool-redis:
-        image: redis:alpine
-        container_name: smartschool-redis
-        restart: always
-        ports:
-            - "6379:6379"
-        volumes:
-            - redis_data:/data
-        networks:
-            - smartschool-network
+        command: python app.manage.py runserver
 
 volumes:
-    smartschool_db_data:
     static:
     media:
-    redis_data:
-
-networks:
-    smartschool-network:
-        driver: bridge

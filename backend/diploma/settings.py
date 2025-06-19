@@ -165,9 +165,8 @@ EMAIL_PORT = 587
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://44dc-2a03-32c0-31-8beb-6a5d-7fb2-3842-e300.ngrok-free.app',
-    # или короче, чтобы не менять при каждом новом туннеле:
-    'https://*.ngrok-free.app',
+    'http://amma-pregnancy.kz',
+    'https://amma-pregnancy.kz'
 ]
 
 
